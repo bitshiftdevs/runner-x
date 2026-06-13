@@ -100,6 +100,15 @@ export type Rating = {
   createdAt: string;
 };
 
+export type AppNotification = {
+  id: string;
+  title: string;
+  body: string;
+  read: boolean;
+  createdAt: string;
+  type: "job_update" | "message" | "rating" | "system";
+};
+
 export type PaymentStatus = "pending" | "success" | "failed" | "refunded";
 
 export type Payment = {

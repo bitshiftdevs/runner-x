@@ -60,6 +60,20 @@ export function SideNav({ onPostQuest }: SideNavProps) {
         })}
       </div>
 
+      <div className="px-sm mt-md">
+        <p className="px-md py-xs font-mono text-xs text-on-surface-variant/50 uppercase tracking-widest mb-xs">Command Center</p>
+        <Link
+          href="/admin"
+          className={pathname === "/admin"
+            ? "flex items-center gap-md px-md py-sm bg-primary-container text-on-primary-container rounded-lg border border-primary/30 shadow-[0_0_15px_rgba(139,92,246,0.25)]"
+            : "flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-primary hover:bg-surface-hover transition-all duration-200"
+          }
+        >
+          <Icon name="admin_panel_settings" />
+          <span className="font-mono text-sm">Admin Console</span>
+        </Link>
+      </div>
+
       <div className="mt-auto px-md pb-xl flex flex-col gap-sm">
         <Button
           className="w-full flex items-center justify-center gap-sm"

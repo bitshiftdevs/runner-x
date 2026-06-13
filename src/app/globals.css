@@ -165,4 +165,33 @@
   .glow-primary-hover:hover {
     box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
   }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .quest-card-gradient {
+    background: linear-gradient(
+      145deg,
+      var(--color-surface) 0%,
+      var(--color-surface-container-lowest) 100%
+    );
+  }
+  .scanline-animate {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(208, 188, 255, 0.1);
+    pointer-events: none;
+    animation: scanline 4s linear infinite;
+  }
+}
+
+@keyframes scanline {
+  0% { top: 0; }
+  100% { top: 100%; }
 }

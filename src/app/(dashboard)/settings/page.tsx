@@ -3,13 +3,14 @@
 import { useRouter } from "next/navigation";
 import { Button, Icon, SectionHeader } from "@/components/ui";
 import { useAuthStore } from "@/stores";
+import { api } from "@/lib";
 
 export default function SettingsPage() {
   const router = useRouter();
   const { logout, user } = useAuthStore();
 
   async function handleLogout() {
-    await fetch("/api/auth/logout", { method: "POST" });
+    await api.auth.logout();
     logout();
     router.push("/login");
   }

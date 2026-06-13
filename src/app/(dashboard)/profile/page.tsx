@@ -1,187 +1,243 @@
 "use client";
 
-import { useState } from "react";
-import { Button, Icon, Rating, Badge } from "@/components/ui";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Icon } from "@/components/ui/icon";
+import { formatCurrency, api } from "@/lib";
 import { useAuthStore } from "@/stores";
+import type { Job } from "@/types";
 
 export default function ProfilePage() {
-  const { user, setUser } = useAuthStore();
-  const [editing, setEditing] = useState(false);
-  const [fullName, setFullName] = useState(user?.fullName ?? "");
-  const [bio, setBio] = useState(user?.bio ?? "");
-  const [saving, setSaving] = useState(false);
+  const router = useRouter();
+  const { user, logout } = useAuthStore();
+  const [missions, setMissions] = useState<Job[]>([]);
+  const [loadingMissions, setLoadingMissions] = useState(true);
 
-  async function handleSave() {
-    setSaving(true);
-    try {
-      const res = await fetch("/api/auth/session", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, bio }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data.user);
-        setEditing(false);
+  useEffect(() => {
+    async function fetchMissions() {
+      try {
+        const data = await api.jobs.list({ mine: true });
+        setMissions(data.jobs ?? []);
+      } finally {
+        setLoadingMissions(false);
       }
-    } finally {
-      setSaving(false);
     }
+    fetchMissions();
+  }, []);
+
+  async function handleLogout() {
+    await api.auth.logout();
+    logout();
+    router.push("/login");
   }
 
-  return (
-    <div className="space-y-xl">
-      <h1 className="font-sans text-3xl font-bold text-primary">Profile</h1>
+  const activeMissions = missions.filter(
+    (m) => !["completed", "cancelled", "expired", "draft"].includes(m.status),
+  );
+  const completedMissions = missions
+    .filter((m) => m.status === "completed")
+    .slice(0, 5);
 
-      <div className="grid grid-cols-[1fr_320px] gap-xl items-start">
-        {/* Left: main profile card */}
-        <div className="bg-surface border border-outline-variant rounded-lg p-lg space-y-lg">
-          {/* Avatar + name */}
-          <div className="flex items-center gap-lg">
-            <div className="w-24 h-24 rounded-full bg-primary/20 border-2 border-primary/30 flex items-center justify-center shrink-0 overflow-hidden">
+  return (
+    <div className="max-w-full mx-auto">
+      {/* Profile Hero */}
+      <section className="px-lg pt-lg pb-md">
+        <div className="flex flex-col items-center text-center">
+          {/* Avatar */}
+          <div className="relative mb-md">
+            <div className="w-24 h-24 rounded-full border-2 border-primary p-1">
               {user?.photoUrl ? (
                 <img
                   src={user.photoUrl}
                   alt="avatar"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full rounded-full object-cover"
                 />
               ) : (
-                <Icon name="person" className="text-primary text-[40px]" />
+                <div className="w-full h-full rounded-full bg-primary/20 flex items-center justify-center">
+                  <Icon name="person" size={40} className="text-primary" />
+                </div>
               )}
             </div>
-            <div className="flex-1 min-w-0">
-              {editing ? (
-                <input
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-surface border border-outline-variant rounded-lg px-md py-sm text-on-surface focus:outline-none focus:border-primary font-semibold text-lg"
-                />
-              ) : (
-                <h2 className="font-sans text-2xl font-bold truncate">
-                  {user?.fullName || "—"}
-                </h2>
-              )}
-              <p className="text-on-surface-variant text-sm mt-xs">
-                {user?.phone}
-              </p>
-              <div className="flex flex-wrap gap-sm mt-sm">
-                <span className="font-mono text-xs bg-primary/10 text-primary px-sm py-[2px] rounded border border-primary/30">
-                  {user?.role?.toUpperCase()}
+            <div className="absolute -bottom-1 -right-1 bg-primary text-on-primary p-1 rounded-lg glow-primary">
+              <Icon name="star" filled size={18} />
+            </div>
+          </div>
+
+          <h2 className="font-sans text-3xl font-bold text-on-surface tracking-tight">
+            {user?.fullName || "Runner"}
+          </h2>
+          <div className="mt-xs">
+            <span className="font-mono text-xs text-primary uppercase tracking-widest bg-primary/10 px-md py-xs rounded-full">
+              Elite Courier Status
+            </span>
+          </div>
+
+          {/* Stats grid */}
+          <div className="grid grid-cols-2 gap-md w-full mt-xl">
+            <div className="bg-surface border border-outline-variant rounded-xl p-md flex flex-col items-start gap-xs">
+              <span className="font-mono text-xs text-on-surface-variant uppercase">
+                Rating
+              </span>
+              <div className="flex items-center gap-xs">
+                <span className="font-mono text-2xl font-bold text-primary">
+                  {Number(user?.rating || 0).toFixed(1)}
                 </span>
-                {user?.studentIdVerified && (
-                  <span className="font-mono text-xs bg-success/10 text-success px-sm py-[2px] rounded border border-success/30">
-                    VERIFIED
-                  </span>
-                )}
-                <span className="font-mono text-xs bg-surface-container-high text-on-surface-variant px-sm py-[2px] rounded border border-outline-variant">
-                  {user?.campus}
-                </span>
+                <Icon name="grade" filled className="text-primary" />
               </div>
             </div>
-          </div>
-
-          {/* Bio */}
-          <div>
-            <p className="font-mono text-xs text-on-surface-variant uppercase mb-sm">
-              Bio
-            </p>
-            {editing ? (
-              <textarea
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                rows={4}
-                className="w-full bg-surface border border-outline-variant rounded-lg px-md py-sm text-on-surface focus:outline-none focus:border-primary resize-none"
-                placeholder="Tell the guild about yourself..."
-              />
-            ) : (
-              <p className="text-on-surface-variant leading-relaxed">
-                {user?.bio || "No bio yet."}
-              </p>
-            )}
-          </div>
-
-          {/* Actions */}
-          <div className="flex gap-md pt-md border-t border-outline-variant">
-            {editing ? (
-              <>
-                <Button
-                  variant="ghost"
-                  onClick={() => {
-                    setEditing(false);
-                    setFullName(user?.fullName ?? "");
-                    setBio(user?.bio ?? "");
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button onClick={handleSave} disabled={saving}>
-                  {saving ? "Saving..." : "Save Changes"}
-                </Button>
-              </>
-            ) : (
-              <Button
-                variant="secondary"
-                onClick={() => setEditing(true)}
-                className="flex items-center gap-sm"
-              >
-                <Icon name="edit" size={16} />
-                Edit Profile
-              </Button>
-            )}
-          </div>
-        </div>
-
-        {/* Right: stats + badges */}
-        <div className="sticky top-20 space-y-lg">
-          {/* Stats */}
-          <div className="bg-surface border border-outline-variant rounded-lg p-lg space-y-md">
-            <p className="font-mono text-xs text-on-surface-variant uppercase">
-              Stats
-            </p>
-            <div className="space-y-md">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-on-surface-variant">
-                  Total Jobs
-                </span>
-                <span className="font-mono font-bold text-primary text-lg">
+            <div className="bg-surface border border-outline-variant rounded-xl p-md flex flex-col items-start gap-xs">
+              <span className="font-mono text-xs text-on-surface-variant uppercase">
+                Quests
+              </span>
+              <div className="flex items-center gap-xs">
+                <span className="font-mono text-2xl font-bold text-success">
                   {user?.totalJobs ?? 0}
                 </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-on-surface-variant">Rating</span>
-                <Rating value={Number(user?.rating) || 0} showValue />
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-on-surface-variant">Campus</span>
-                <span className="font-mono text-sm text-tertiary">
-                  {user?.campus}
-                </span>
+                <Icon name="assignment_turned_in" className="text-success" />
               </div>
             </div>
-          </div>
-
-          {/* Achievements */}
-          <div className="bg-surface border border-outline-variant rounded-lg p-lg space-y-md">
-            <p className="font-mono text-xs text-on-surface-variant uppercase">
-              Achievements
-            </p>
-            <div className="grid grid-cols-3 gap-sm">
-              <Badge icon="bedtime" variant="secondary" title="Night Runner" locked />
-              <Badge icon="bolt" variant="primary" title="Speed Demon" locked />
-              <Badge
-                icon="workspace_premium"
-                variant="tertiary"
-                title="Elite"
-                locked
-              />
-            </div>
-            <p className="text-xs text-on-surface-variant">
-              Complete quests to unlock achievements.
-            </p>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Active Errands */}
+      {!loadingMissions && activeMissions.length > 0 && (
+        <section className="px-lg mt-md">
+          <div className="flex justify-between items-center mb-md">
+            <h3 className="font-sans text-lg font-semibold text-on-surface">
+              Active Errands
+            </h3>
+            <span className="font-mono text-xs bg-primary/10 text-primary px-sm py-xs rounded">
+              {activeMissions.length} IN PROGRESS
+            </span>
+          </div>
+          <div className="space-y-md">
+            {activeMissions.map((mission) => (
+              <div
+                key={mission.id}
+                className="bg-surface border border-outline-variant rounded-xl p-md quest-card-gradient"
+              >
+                <div className="flex justify-between items-start mb-sm">
+                  <div className="flex-1 min-w-0 pr-sm">
+                    <h4 className="font-sans text-base font-bold text-on-surface truncate">
+                      {mission.title}
+                    </h4>
+                    <p className="font-mono text-xs text-on-surface-variant mt-xs line-clamp-1">
+                      {(mission.pickupLocation as { address: string })
+                        ?.address ?? "—"}{" "}
+                      →{" "}
+                      {(mission.deliveryLocation as { address: string })
+                        ?.address ?? "—"}
+                    </p>
+                  </div>
+                  <span className="font-mono text-base font-bold text-primary shrink-0">
+                    {formatCurrency(mission.runnerEarnings)}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => router.push("/missions")}
+                  className="w-full mt-md bg-primary text-on-primary py-sm rounded-lg font-mono text-xs glow-primary text-center"
+                >
+                  UPDATE STATUS
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Quest History */}
+      {!loadingMissions && completedMissions.length > 0 && (
+        <section className="px-lg mt-xl">
+          <div className="flex justify-between items-center mb-md">
+            <h3 className="font-sans text-lg font-semibold text-on-surface">
+              Quest History
+            </h3>
+            <Link
+              href="/missions"
+              className="text-primary font-mono text-xs hover:underline"
+            >
+              VIEW ALL
+            </Link>
+          </div>
+          <div className="space-y-sm">
+            {completedMissions.map((m) => (
+              <div
+                key={m.id}
+                className="flex items-center justify-between p-md bg-surface-container-low rounded-lg border border-outline-variant/30"
+              >
+                <div className="flex items-center gap-md">
+                  <div className="bg-success/10 p-sm rounded">
+                    <Icon name="check_circle" className="text-success" />
+                  </div>
+                  <div>
+                    <p className="font-sans text-sm font-medium text-on-surface">
+                      {m.title}
+                    </p>
+                    <p className="font-mono text-xs text-on-surface-variant">
+                      {new Date(m.updatedAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+                <span className="font-mono text-sm font-bold text-on-surface">
+                  {formatCurrency(m.runnerEarnings)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Settings */}
+      <section className="px-lg mt-xl">
+        <h3 className="font-sans text-lg font-semibold text-on-surface mb-md">
+          Settings
+        </h3>
+        <div className="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant">
+          <Link
+            href="/settings"
+            className="flex items-center justify-between px-md py-lg hover:bg-surface-hover transition-colors border-b border-outline-variant/30"
+          >
+            <div className="flex items-center gap-md text-on-surface-variant">
+              <Icon name="person_outline" />
+              <span className="font-sans text-base">Account Preferences</span>
+            </div>
+            <Icon name="chevron_right" className="text-on-surface-variant" />
+          </Link>
+          <Link
+            href="/earnings"
+            className="flex items-center justify-between px-md py-lg hover:bg-surface-hover transition-colors border-b border-outline-variant/30"
+          >
+            <div className="flex items-center gap-md text-on-surface-variant">
+              <Icon name="account_balance_wallet" />
+              <span className="font-sans text-base">Payout Methods</span>
+            </div>
+            <Icon name="chevron_right" className="text-on-surface-variant" />
+          </Link>
+          <Link
+            href="/settings"
+            className="flex items-center justify-between px-md py-lg hover:bg-surface-hover transition-colors"
+          >
+            <div className="flex items-center gap-md text-on-surface-variant">
+              <Icon name="security" />
+              <span className="font-sans text-base">Privacy & Shield</span>
+            </div>
+            <Icon name="chevron_right" className="text-on-surface-variant" />
+          </Link>
+        </div>
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="w-full mt-xl py-md text-error font-sans font-semibold hover:bg-error/5 rounded-lg transition-colors border border-error/20"
+        >
+          LOG OUT OF COMMAND
+        </button>
+      </section>
+
+      {/* Bottom padding for nav */}
+      <div className="h-8" />
     </div>
   );
 }

@@ -2,16 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Icon, Toggle, SectionHeader } from "@/components/ui";
-import { formatRelativeTime } from "@/lib";
-
-type Notification = {
-  id: string;
-  title: string;
-  body: string;
-  read: boolean;
-  createdAt: string;
-  type: "job_update" | "message" | "rating" | "system";
-};
+import { formatRelativeTime, api } from "@/lib";
+import type { AppNotification } from "@/types";
 
 const typeIcons: Record<string, string> = {
   job_update: "assignment",
@@ -21,7 +13,7 @@ const typeIcons: Record<string, string> = {
 };
 
 export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [loading, setLoading] = useState(true);
   const [soundsEnabled, setSoundsEnabled] = useState(true);
   const [pushEnabled, setPushEnabled] = useState(false);
@@ -29,8 +21,7 @@ export default function NotificationsPage() {
   useEffect(() => {
     async function fetchNotifications() {
       try {
-        const res = await fetch("/api/notifications");
-        const data = await res.json();
+        const data = await api.notifications.list();
         setNotifications(data.notifications ?? []);
       } finally {
         setLoading(false);
@@ -40,7 +31,7 @@ export default function NotificationsPage() {
   }, []);
 
   async function markAllRead() {
-    await fetch("/api/notifications/read", { method: "POST" });
+    await api.notifications.markAllRead();
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   }
 

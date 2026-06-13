@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button, Icon, StatusChip } from "@/components/ui";
-import { formatCurrency } from "@/lib";
+import { formatCurrency, api } from "@/lib";
 import { JOB_STAGE_LABELS } from "@/constants";
 import type { Job, JobStatus } from "@/types";
 import Link from "next/link";
@@ -24,8 +24,7 @@ export default function MissionsPage() {
   useEffect(() => {
     async function fetchMissions() {
       try {
-        const res = await fetch("/api/jobs?mine=true");
-        const data = await res.json();
+        const data = await api.jobs.list({ mine: true });
         setMissions(data.jobs ?? []);
       } finally {
         setLoading(false);
@@ -42,22 +41,16 @@ export default function MissionsPage() {
   );
 
   async function advanceStage(jobId: string) {
-    const res = await fetch(`/api/jobs/${jobId}/advance`, { method: "POST" });
-    if (res.ok) {
-      const data = await res.json();
-      setMissions((prev) =>
-        prev.map((m) => (m.id === jobId ? data.job : m)),
-      );
+    const data = await api.jobs.advance(jobId);
+    if (data.job) {
+      setMissions((prev) => prev.map((m) => (m.id === jobId ? data.job : m)));
     }
   }
 
   async function confirmDelivery(jobId: string) {
-    const res = await fetch(`/api/jobs/${jobId}/confirm`, { method: "POST" });
-    if (res.ok) {
-      const data = await res.json();
-      setMissions((prev) =>
-        prev.map((m) => (m.id === jobId ? data.job : m)),
-      );
+    const data = await api.jobs.confirm(jobId);
+    if (data.job) {
+      setMissions((prev) => prev.map((m) => (m.id === jobId ? data.job : m)));
     }
   }
 

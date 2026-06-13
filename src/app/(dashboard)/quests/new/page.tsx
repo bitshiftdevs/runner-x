@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Icon, SectionHeader } from "@/components/ui";
 import { JOB_CATEGORIES, URGENCY_OPTIONS } from "@/constants";
-import { calculatePricing, formatCurrency } from "@/lib";
+import { calculatePricing, formatCurrency, api } from "@/lib";
 import type { JobCategory, UrgencyLevel } from "@/types";
 
 export default function NewQuestPage() {
@@ -31,22 +31,17 @@ export default function NewQuestPage() {
   async function handleSubmit() {
     setLoading(true);
     try {
-      const res = await fetch("/api/jobs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          description,
-          category,
-          urgency,
-          vendorName: vendorName || null,
-          pickupLocation: { lat: 6.673, lng: -1.565, address: pickupAddress },
-          deliveryLocation: { lat: 6.68, lng: -1.57, address: deliveryAddress },
-          distanceKm: estimatedDistanceKm,
-        }),
+      const data = await api.jobs.create({
+        title,
+        description,
+        category,
+        urgency,
+        vendorName: vendorName || null,
+        pickupLocation: { lat: 6.673, lng: -1.565, address: pickupAddress },
+        deliveryLocation: { lat: 6.68, lng: -1.57, address: deliveryAddress },
+        distanceKm: estimatedDistanceKm,
       });
-      if (res.ok) {
-        const data = await res.json();
+      if (data.job) {
         router.push(`/quests/${data.job.id}`);
       }
     } finally {
