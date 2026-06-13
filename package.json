@@ -14,7 +14,7 @@
     "db:pull": "drizzle-kit pull",
     "db:studio": "drizzle-kit studio",
     "db:drop": "drizzle-kit drop",
-    "db:seed": "bun run scripts/seed.ts"
+    "db:seed": "bun run scripts/seed/index.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
