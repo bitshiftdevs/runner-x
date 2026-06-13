@@ -34,6 +34,39 @@ function CountdownTimer({ expiresAt }: { expiresAt: string | null }) {
   return <span className="font-mono text-2xl font-bold text-error">{timeLeft}</span>;
 }
 
+function StaticMap({
+  pickup,
+  delivery,
+}: {
+  pickup: { lat: number; lng: number; address: string };
+  delivery: { lat: number; lng: number; address: string };
+}) {
+  const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
+  if (!key || key === "your-maps-key") {
+    // Styled fallback when no API key
+    return (
+      <div className="absolute inset-0 bg-surface-container-lowest flex items-center justify-center">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_30%_40%,var(--color-primary)_0%,transparent_50%),radial-gradient(circle_at_70%_60%,var(--color-secondary)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23494454' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
+      </div>
+    );
+  }
+
+  const center = `${(pickup.lat + delivery.lat) / 2},${(pickup.lng + delivery.lng) / 2}`;
+  const markers = `markers=color:0xd0bcff%7C${pickup.lat},${pickup.lng}&markers=color:0xffb0cd%7C${delivery.lat},${delivery.lng}`;
+  const path = `path=color:0xd0bcff80%7Cweight:4%7C${pickup.lat},${pickup.lng}%7C${delivery.lat},${delivery.lng}`;
+  const style = "style=feature:all%7Celement:geometry%7Ccolor:0x18181b&style=feature:all%7Celement:labels.text.fill%7Ccolor:0xa1a1aa&style=feature:water%7Celement:geometry%7Ccolor:0x0e0e10&style=feature:road%7Celement:geometry%7Ccolor:0x27272a";
+  const src = `https://maps.googleapis.com/maps/api/staticmap?center=${center}&zoom=15&size=800x600&maptype=roadmap&${markers}&${path}&${style}&key=${key}`;
+
+  return (
+    <img
+      src={src}
+      alt="Quest route map"
+      className="absolute inset-0 w-full h-full object-cover"
+    />
+  );
+}
+
 export default function QuestDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
@@ -87,66 +120,59 @@ export default function QuestDetailPage() {
   const isRunner = user?.id === quest.runnerId;
   const canAccept = !isOwner && quest.status === "posted";
   const isUrgent = quest.urgency !== "normal";
-  const pickupAddress =
-    (quest.pickupLocation as { address?: string })?.address ?? "Pickup Point";
-  const deliveryAddress =
-    (quest.deliveryLocation as { address?: string })?.address ?? "Delivery Point";
+  const pickup = quest.pickupLocation as { lat: number; lng: number; address: string };
+  const delivery = quest.deliveryLocation as { lat: number; lng: number; address: string };
+  const pickupAddress = pickup?.address ?? "Pickup Point";
+  const deliveryAddress = delivery?.address ?? "Delivery Point";
+  const distanceKm = quest.distanceFee ? (quest.distanceFee / 2.5).toFixed(1) : "—";
+  const estMinutes = quest.distanceFee ? Math.ceil((quest.distanceFee / 2.5) * 7) : "—";
 
   return (
     <div className="flex flex-col lg:flex-row lg:-m-lg lg:h-[calc(100vh-4rem)] overflow-hidden">
-      {/* Left Panel: Map */}
-      <section className="w-full lg:w-3/5 h-64 lg:h-full relative bg-surface-container-lowest border-b lg:border-b-0 lg:border-r border-outline-variant overflow-hidden">
-        <div className="absolute inset-0 bg-surface-container-lowest flex items-center justify-center">
-          <div className="text-center text-on-surface-variant">
-            <Icon name="map" className="text-[64px] opacity-30" />
-            <p className="font-mono text-xs mt-sm opacity-50">MAP VIEW</p>
-          </div>
-        </div>
+      {/* Map Panel */}
+      <section className="w-full lg:w-3/5 h-44 sm:h-56 lg:h-full relative bg-surface-container-lowest border-b lg:border-b-0 lg:border-r border-outline-variant overflow-hidden shrink-0">
+        <StaticMap pickup={pickup} delivery={delivery} />
 
-        {/* Route info overlay */}
-        <div className="absolute top-lg left-lg flex flex-col gap-sm z-10">
-          <div className="bg-surface/90 backdrop-blur-md border border-outline-variant p-md rounded-lg flex items-center gap-md">
-            <div className="flex flex-col items-center gap-xs">
+        {/* Route overlay */}
+        <div className="absolute top-sm left-sm lg:top-lg lg:left-lg z-10">
+          <div className="bg-surface/90 backdrop-blur-md border border-outline-variant p-sm lg:p-md rounded-lg flex items-center gap-sm lg:gap-md text-xs lg:text-sm">
+            <div className="flex flex-col items-center gap-[2px]">
               <span className="w-2 h-2 rounded-full bg-primary" />
-              <div className="w-px h-8 bg-outline-variant" />
+              <div className="w-px h-5 lg:h-8 bg-outline-variant" />
               <span className="w-2 h-2 rounded-full bg-secondary" />
             </div>
-            <div className="flex flex-col">
-              <span className="font-mono text-[10px] text-text-secondary uppercase">
+            <div className="flex flex-col min-w-0">
+              <span className="font-mono text-[9px] lg:text-[10px] text-text-secondary uppercase">
                 PICKUP
               </span>
-              <span className="text-sm text-text-primary">{pickupAddress}</span>
-              <div className="h-3" />
-              <span className="font-mono text-[10px] text-text-secondary uppercase">
+              <span className="text-text-primary truncate">{pickupAddress}</span>
+              <div className="h-1 lg:h-2" />
+              <span className="font-mono text-[9px] lg:text-[10px] text-text-secondary uppercase">
                 DELIVERY
               </span>
-              <span className="text-sm text-text-primary">{deliveryAddress}</span>
+              <span className="text-text-primary truncate">{deliveryAddress}</span>
             </div>
           </div>
         </div>
 
-        {/* Distance & time overlay */}
-        <div className="absolute bottom-lg left-lg z-10">
-          <div className="bg-surface/90 backdrop-blur-md border border-outline-variant px-lg py-md rounded-lg">
-            <div className="flex items-center gap-xl">
+        {/* Distance/time overlay */}
+        <div className="absolute bottom-sm left-sm lg:bottom-lg lg:left-lg z-10">
+          <div className="bg-surface/90 backdrop-blur-md border border-outline-variant px-md py-sm lg:px-lg lg:py-md rounded-lg">
+            <div className="flex items-center gap-lg">
               <div className="flex flex-col">
-                <span className="font-mono text-[10px] text-text-secondary uppercase">
+                <span className="font-mono text-[9px] lg:text-[10px] text-text-secondary uppercase">
                   DISTANCE
                 </span>
-                <span className="font-mono text-xl font-bold text-primary">
-                  {quest.distanceFee
-                    ? `${(quest.distanceFee / 2.5).toFixed(1)} KM`
-                    : "—"}
+                <span className="font-mono text-base lg:text-xl font-bold text-primary">
+                  {distanceKm} KM
                 </span>
               </div>
               <div className="flex flex-col">
-                <span className="font-mono text-[10px] text-text-secondary uppercase">
+                <span className="font-mono text-[9px] lg:text-[10px] text-text-secondary uppercase">
                   EST. TIME
                 </span>
-                <span className="font-mono text-xl font-bold text-secondary">
-                  {quest.distanceFee
-                    ? `${Math.ceil((quest.distanceFee / 2.5) * 7)} MIN`
-                    : "—"}
+                <span className="font-mono text-base lg:text-xl font-bold text-secondary">
+                  {estMinutes} MIN
                 </span>
               </div>
             </div>
@@ -154,16 +180,16 @@ export default function QuestDetailPage() {
         </div>
       </section>
 
-      {/* Right Panel: Job Details */}
-      <section className="w-full lg:w-2/5 flex flex-col h-full bg-surface overflow-y-auto">
-        <div className="p-lg lg:p-xl flex-1 flex flex-col gap-xl">
-          {/* Header & Tags */}
-          <div className="flex flex-col gap-md">
+      {/* Details Panel */}
+      <section className="w-full lg:w-2/5 flex flex-col min-h-0 flex-1 bg-surface overflow-y-auto pb-24 lg:pb-0">
+        <div className="p-md lg:p-xl flex-1 flex flex-col gap-lg lg:gap-xl">
+          {/* Header */}
+          <div className="flex flex-col gap-sm lg:gap-md">
             <div className="flex items-center justify-between">
               {isUrgent ? (
-                <span className="px-md py-xs bg-error/10 border border-error/30 text-error font-mono text-xs rounded-full flex items-center gap-xs">
-                  <Icon name="bolt" size={14} />
-                  URGENT QUEST
+                <span className="px-sm lg:px-md py-xs bg-error/10 border border-error/30 text-error font-mono text-[10px] lg:text-xs rounded-full flex items-center gap-xs">
+                  <Icon name="bolt" size={12} />
+                  URGENT
                 </span>
               ) : (
                 <StatusChip
@@ -173,44 +199,44 @@ export default function QuestDetailPage() {
               )}
               <CountdownTimer expiresAt={quest.expiresAt} />
             </div>
-            <h1 className="font-sans text-2xl lg:text-[32px] font-semibold leading-tight text-text-primary">
+            <h1 className="font-sans text-xl lg:text-[32px] font-semibold leading-tight text-text-primary">
               {quest.title}
             </h1>
           </div>
 
           {/* Bounty Breakdown */}
-          <div className="p-lg bg-surface-container-high rounded-xl border border-outline-variant">
-            <span className="font-mono text-xs text-text-secondary mb-md block uppercase tracking-wider">
+          <div className="p-md lg:p-lg bg-surface-container-high rounded-xl border border-outline-variant">
+            <span className="font-mono text-[10px] lg:text-xs text-text-secondary mb-sm lg:mb-md block uppercase tracking-wider">
               BOUNTY BREAKDOWN
             </span>
-            <div className="space-y-sm">
+            <div className="space-y-xs lg:space-y-sm">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-text-secondary">Base Errand Fee</span>
-                <span className="font-mono text-text-primary">
+                <span className="font-mono text-sm text-text-primary">
                   {formatCurrency(quest.baseFee)}
                 </span>
               </div>
               {quest.urgencyFee > 0 && (
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-text-secondary">Urgency Bonus</span>
-                  <span className="font-mono text-success">
+                  <span className="font-mono text-sm text-success">
                     + {formatCurrency(quest.urgencyFee)}
                   </span>
                 </div>
               )}
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-text-secondary">
-                  Distance Adjustment
-                </span>
-                <span className="font-mono text-text-primary">
-                  {formatCurrency(quest.distanceFee)}
-                </span>
-              </div>
-              <div className="pt-md mt-md border-t border-outline-variant flex justify-between items-center">
-                <span className="font-sans text-lg font-semibold text-primary">
+              {quest.distanceFee > 0 && (
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-text-secondary">Distance Adjustment</span>
+                  <span className="font-mono text-sm text-text-primary">
+                    {formatCurrency(quest.distanceFee)}
+                  </span>
+                </div>
+              )}
+              <div className="pt-sm lg:pt-md mt-sm lg:mt-md border-t border-outline-variant flex justify-between items-center">
+                <span className="font-sans text-base lg:text-lg font-semibold text-primary">
                   Total Earnings
                 </span>
-                <span className="font-mono text-2xl font-bold text-primary">
+                <span className="font-mono text-xl lg:text-2xl font-bold text-primary">
                   {formatCurrency(quest.runnerEarnings)}
                 </span>
               </div>
@@ -218,21 +244,21 @@ export default function QuestDetailPage() {
           </div>
 
           {/* Description */}
-          <div className="space-y-md">
-            <span className="font-mono text-xs text-text-secondary uppercase tracking-wider">
+          <div className="space-y-sm lg:space-y-md">
+            <span className="font-mono text-[10px] lg:text-xs text-text-secondary uppercase tracking-wider">
               Quest Description
             </span>
-            <p className="text-base text-on-surface-variant leading-relaxed">
+            <p className="text-sm lg:text-base text-on-surface-variant leading-relaxed">
               {quest.description}
             </p>
             <div className="flex flex-wrap gap-sm">
               {quest.category && (
-                <span className="px-md py-xs bg-surface-container-highest border border-outline-variant rounded-lg font-mono text-xs text-text-secondary">
+                <span className="px-sm lg:px-md py-xs bg-surface-container-highest border border-outline-variant rounded-lg font-mono text-[10px] lg:text-xs text-text-secondary">
                   {quest.category.replace(/_/g, " ")}
                 </span>
               )}
               {quest.vendorName && (
-                <span className="px-md py-xs bg-surface-container-highest border border-outline-variant rounded-lg font-mono text-xs text-text-secondary">
+                <span className="px-sm lg:px-md py-xs bg-surface-container-highest border border-outline-variant rounded-lg font-mono text-[10px] lg:text-xs text-text-secondary">
                   {quest.vendorName}
                 </span>
               )}
@@ -240,9 +266,9 @@ export default function QuestDetailPage() {
           </div>
         </div>
 
-        {/* Swipe Action Area */}
+        {/* Action Area */}
         {canAccept && (
-          <div className="p-lg lg:p-xl bg-background border-t border-outline-variant">
+          <div className="p-md lg:p-xl bg-background border-t border-outline-variant sticky bottom-0">
             <SlideToAccept
               label="DRAG TO ACCEPT QUEST"
               onAccept={handleAccept}
@@ -251,7 +277,7 @@ export default function QuestDetailPage() {
         )}
 
         {isRunner && quest.status !== "completed" && (
-          <div className="p-lg bg-background border-t border-outline-variant">
+          <div className="p-md lg:p-lg bg-background border-t border-outline-variant sticky bottom-0">
             <button
               type="button"
               onClick={() => router.push("/missions")}
@@ -263,7 +289,7 @@ export default function QuestDetailPage() {
         )}
 
         {isOwner && quest.status === "posted" && (
-          <div className="p-lg bg-background border-t border-outline-variant text-center">
+          <div className="p-md lg:p-lg bg-background border-t border-outline-variant sticky bottom-0 text-center">
             <p className="text-on-surface-variant text-sm font-mono">
               Waiting for a runner to accept...
             </p>

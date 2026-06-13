@@ -26,27 +26,27 @@ export default function SettingsPage() {
             App Preferences
           </p>
           <div className="bg-surface border border-outline-variant rounded-lg divide-y divide-outline-variant">
-            <div className="p-md flex items-center justify-between">
+            <button type="button" onClick={() => router.push("/settings/appearance")} className="w-full p-md flex items-center justify-between cursor-pointer">
               <div className="flex items-center gap-md">
                 <Icon name="palette" className="text-on-surface-variant" />
                 <span>Appearance</span>
               </div>
               <span className="text-sm text-on-surface-variant">Dark</span>
-            </div>
-            <div className="p-md flex items-center justify-between">
+            </button>
+            <button type="button" onClick={() => router.push("/settings/language")} className="w-full p-md flex items-center justify-between cursor-pointer">
               <div className="flex items-center gap-md">
                 <Icon name="language" className="text-on-surface-variant" />
                 <span>Language</span>
               </div>
               <span className="text-sm text-on-surface-variant">English</span>
-            </div>
-            <div className="p-md flex items-center justify-between">
+            </button>
+            <button type="button" onClick={() => router.push("/settings/notifications")} className="w-full p-md flex items-center justify-between cursor-pointer">
               <div className="flex items-center gap-md">
                 <Icon name="notifications" className="text-on-surface-variant" />
                 <span>Notifications</span>
               </div>
               <Icon name="chevron_right" className="text-on-surface-variant" />
-            </div>
+            </button>
             <div className="p-md flex items-center justify-between">
               <div className="flex items-center gap-md">
                 <Icon name="info" className="text-on-surface-variant" />
@@ -65,10 +65,10 @@ export default function SettingsPage() {
             Account
           </p>
           <div className="bg-surface border border-outline-variant rounded-lg divide-y divide-outline-variant">
-            <div className="p-md flex items-center justify-between">
+            <button type="button" onClick={() => router.push("/settings/phone")} className="w-full p-md flex items-center justify-between cursor-pointer">
               <div className="flex items-center gap-md">
                 <Icon name="phone" className="text-on-surface-variant" />
-                <div>
+                <div className="text-left">
                   <p className="text-sm">Phone</p>
                   <p className="text-xs text-on-surface-variant">
                     {user?.phone ?? "—"}
@@ -76,11 +76,11 @@ export default function SettingsPage() {
                 </div>
               </div>
               <span className="font-mono text-xs text-success">Linked</span>
-            </div>
-            <div className="p-md flex items-center justify-between">
+            </button>
+            <button type="button" onClick={() => router.push("/profile/verification")} className="w-full p-md flex items-center justify-between cursor-pointer">
               <div className="flex items-center gap-md">
                 <Icon name="school" className="text-on-surface-variant" />
-                <div>
+                <div className="text-left">
                   <p className="text-sm">Student ID</p>
                   <p className="text-xs text-on-surface-variant">
                     {user?.studentIdVerified ? "Verified" : "Not verified"}
@@ -92,21 +92,21 @@ export default function SettingsPage() {
               ) : (
                 <Icon name="chevron_right" className="text-on-surface-variant" />
               )}
-            </div>
-            <div className="p-md flex items-center justify-between">
+            </button>
+            <button type="button" onClick={() => router.push("/settings/privacy")} className="w-full p-md flex items-center justify-between cursor-pointer">
               <div className="flex items-center gap-md">
                 <Icon name="privacy_tip" className="text-on-surface-variant" />
                 <span>Privacy</span>
               </div>
               <Icon name="chevron_right" className="text-on-surface-variant" />
-            </div>
-            <div className="p-md flex items-center justify-between">
+            </button>
+            <button type="button" onClick={() => router.push("/settings/help")} className="w-full p-md flex items-center justify-between cursor-pointer">
               <div className="flex items-center gap-md">
                 <Icon name="help" className="text-on-surface-variant" />
                 <span>Help & Support</span>
               </div>
               <Icon name="chevron_right" className="text-on-surface-variant" />
-            </div>
+            </button>
           </div>
         </div>
       </div>
