@@ -1,91 +1,63 @@
 # 📖 Runner_X Engineering Principles & Repository Rules
 
-These are non-negotiable rules for every contributor and AI agent. They combine the strict visual aesthetics of Runner_X with enterprise-grade Clean Architecture principles.
+These are non-negotiable rules for every contributor and AI agent. They combine the strict visual aesthetics of Runner_X with enterprise-grade Clean Architecture principles tailored for our Next.js stack.
 
 ---
 
-## 1. Theme — Never Branch on Brightness
-**Rule:** Widgets must never check `Theme.of(context).brightness` to pick colours. All colour decisions live in the core theme and flow through `Theme.of(context).colorScheme` or `TextTheme`.
-```dart
+## 1. Theme — Never Hardcode Colors
+**Rule:** Never write hardcoded color hex values or magic spacing numbers in your UI code. All color decisions must flow through Tailwind CSS utilities that reference our CSS custom properties (`var(--color-*)`).
+```tsx
 // ❌ Never do this
-color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+<div className="bg-[#1A1A1A] text-white">
 // ✅ Do this
-color: Theme.of(context).colorScheme.surface,
+<div className="bg-surface text-text-primary">
 ```
 
-## 2. Colours — `AppColors` Is a Palette, Not a Dependency
-**Rule:** Widgets must not import `AppColors` to resolve light/dark pairs. `AppColors` is only for theme generation and mode-independent colours (like `AppColors.primary`, `AppColors.error`).
+## 2. Architecture — Clean Layers
+**Rule:** Follow the Clean Architecture directory structure exactly.
+- **`types/`**: Pure TypeScript types (prefer `type` over `interface`). No runtime code.
+- **`services/`**: External API calls. Define abstract classes as contracts, concrete classes for implementation.
+- **`stores/`**: Client state.
+- **`db/`**: Database schema and queries.
+- **`components/`**: Presentational UI only.
 
-## 3. Design & Visual Excellence (The "Wow" Factor)
-**Rule:** We build premium interfaces. Use the customized Material 3 widgets (flat elevations, large border radii `AppDimensions.radiusLg`). Provide micro-animations for interactions. Never use plain red/blue/green—use the exact tokens in `AppTheme`.
+## 3. State Management — Zustand Only
+**Rule:** Use Zustand for global client state. Keep stores thin—complex business logic should live in `services/` or `lib/` utilities. Do not use Context API for global state.
 
-## 4. Navigation — Use GoRouter Only
-**Rule:** All navigation must go through GoRouter via `context.go()`, `context.push()`, or `context.pop()`. Direct `Navigator.of(context).push()` calls are banned except inside `RunnerAppBar`.
+## 4. Database — Drizzle ORM is the Source of Truth
+**Rule:** All schema definitions live in `src/db/schema/` (or similar configured DB path). Never manually alter the database. Always use `bun drizzle-kit generate` and `bun drizzle-kit migrate` for changes.
 
-## 5. Route Paths — Always Use `AppStrings` Constants
-**Rule:** Route paths are defined once in `AppStrings` (`lib/core/constants/app_strings.dart`) and registered in `AppRouter`. Never hardcode a path string at a call site.
-```dart
+## 5. UI Components — Design System First
+**Rule:** Before writing a new base widget, check `src/components/ui/`. Use existing base components (Buttons, Inputs, Cards, Badges) to maintain visual consistency. 
+
+## 6. Routing & Navigation — Next.js App Router
+**Rule:** Use the Next.js 16 App Router conventions (`src/app/`). All navigation should happen via `<Link>` from `next/link` or the `useRouter` hook from `next/navigation` (not `next/router`).
+
+## 7. Environment Variables — Validated Constants
+**Rule:** Never access `process.env.*` directly inside components. Use the validated `env` object from `src/constants/env.ts` (or similar).
+```typescript
 // ❌ Never do this
-context.go('/post-job');
+const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
 // ✅ Do this
-context.go(AppStrings.routePostJob);
+import { env } from '@/constants/env';
+const key = env.googleMapsKey;
 ```
 
-## 6. State Management — Riverpod Notifiers Only
-**Rule:** Async operations or non-trivial UI state must use Riverpod `@riverpod` Notifiers (`Notifier` or `AsyncNotifier`). State must be immutable. Business logic lives in the Notifier, never in the Widget.
+## 8. Formatting and Linting — Zero Tolerance (Biome)
+**Rule:** The project uses Biome (no ESLint/Prettier). Every change must pass `bun biome check .` with zero errors. Run `bun biome check --write .` to auto-format before committing.
 
-## 7. Architecture — Clean Layers, No Skipping
-**Rule:** Every feature follows `data → domain → presentation`. 
-- **Presentation** depends on **Domain**.
-- **Data** depends on **Domain**. 
-- **Domain** depends on nothing (pure Dart).
+## 9. Next.js Best Practices — Server vs Client Components
+**Rule:** Default to Server Components (`React Server Components`). Only add `"use client"` at the very top of files when you absolutely need interactivity (hooks, state, event listeners). Push `"use client"` as far down the component tree as possible.
 
-## 8. Dependency Injection — Riverpod Providers
-**Rule:** We use Riverpod for all DI. Repositories and Data Sources must be exposed via `@riverpod` providers. No `GetIt` or global singletons.
+## 10. File Size & Complexity
+**Rule:** Keep files focused. If a file exceeds 150-200 lines, consider extracting sub-components, hooks, or utility functions to maintain readability.
 
-## 9. Error Handling — Exceptions in Data, Caught in Presentation
-**Rule:** Data layer throws custom exceptions. The presentation layer (Notifier) catches them and maps them to human-readable states. Use `error_handler.dart` for uniform error parsing.
-
-## 10. Shared Widgets — Core Library First
-**Rule:** Before writing a new widget, check `lib/shared/widgets/`. Use `RunnerButton`, `RunnerTextField`, and `RunnerAppBar`.
-
-## 11. Snackbars — Always Use `AppSnackbar`
-**Rule:** Never construct a raw `SnackBar`. Use `AppSnackbar.showSuccess()`, `AppSnackbar.showError()`, etc.
-
-## 12. Barrel Files — One Per Layer
-**Rule:** Each feature layer exposes a barrel file for its public API. Do not cross-import deep internal files from other features.
-
-## 13. Formatting and Analysis — Zero Tolerance
-**Rule:** Every change must pass `flutter analyze` with **no issues**. Run `flutter format .` before committing.
-
-## 14. Constants — No Magic Values
-**Rule:** No hardcoded numbers or strings in widgets.
-- Spacing/Radius: `AppDimensions`
-- Icons: `AppIcons`
-- Routes: `AppStrings`
-
-## 15. Listeners — Separate from Build Logic
-**Rule:** Side-effects (snackbars, routing) must be handled inside `ref.listen()`, NOT inside the `build` layout tree directly.
-
-## 16. State Classes — Freezed Immutable Models
-**Rule:** All models and complex states must be built with `Freezed` (`@freezed`). They must be `@immutable`, have `copyWith`, and handle JSON serialization gracefully.
-
-## 17. Async Safety — Check `context.mounted`
-**Rule:** Any `async` method in a widget must guard `BuildContext` usage with `if (!context.mounted) return;` after an `await`.
-
-## 18. Database & Infrastructure — Supabase
-**Rule:** All schema changes are handled via Supabase SQL scripts. Local data caching uses `Isar`. Realtime subscriptions must be managed cleanly via StreamProviders.
-
-## 19. Code Size — Strict < 150 Lines Limit
-**Rule:** No single Dart file may exceed 150 lines of code. If a file grows, extract visual segments into local `widgets/` directories.
-
-## 20. Naming Conventions
+## 11. Naming Conventions
 **Rule:**
-- Files: `snake_case`
-- Classes: `PascalCase`
-- Variables/Methods: `camelCase`
-- Private members: `_camelCase`
-- Providers: `featureNameProvider`
+- **Files/Folders:** `kebab-case` for standard files/folders, `PascalCase.tsx` for React components.
+- **Types/Interfaces:** `PascalCase`.
+- **Variables/Functions:** `camelCase`.
+- **Constants:** `UPPER_SNAKE_CASE` (for global non-env constants).
 
-## 21. Logging — Use `AppLogger`
-**Rule:** Never use `print()`. All logging goes through `AppLogger.log()` or `AppLogger.error()` in `core/utils/app_logger.dart`.
+## 12. Security & Secrets
+**Rule:** Never commit `.env.local` or any hardcoded API keys. They belong in environment variables only. 
