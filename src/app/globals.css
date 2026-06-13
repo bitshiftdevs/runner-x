@@ -18,8 +18,78 @@
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-full: 9999px;
+}
 
-  /* Colors */
+/*
+ * Colors use regular @theme (no inline) so Tailwind emits var(--color-X)
+ * in utilities instead of baking in a static hex value. This allows
+ * the .dark selector below to swap colors at runtime.
+ *
+ * Default values = light theme.
+ */
+@theme {
+  --color-background: #fffbff;
+  --color-surface: #fffbff;
+  --color-surface-hover: #f3eeff;
+  --color-surface-dim: #ece5f0;
+  --color-surface-bright: #ffffff;
+  --color-surface-container: #f3ecff;
+  --color-surface-container-low: #f7f0ff;
+  --color-surface-container-high: #ece5f8;
+  --color-surface-container-highest: #e6dff3;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-variant: #e7dff8;
+  --color-surface-tint: #6d3bd7;
+
+  --color-primary: #6d3bd7;
+  --color-primary-container: #ecdcff;
+  --color-primary-fixed: #e9ddff;
+  --color-primary-fixed-dim: #d0bcff;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #21005d;
+  --color-on-primary-fixed: #23005c;
+  --color-on-primary-fixed-variant: #5516be;
+  --color-inverse-primary: #d0bcff;
+
+  --color-secondary: #aa0266;
+  --color-secondary-container: #ffd9e4;
+  --color-secondary-fixed: #ffd9e4;
+  --color-secondary-fixed-dim: #ffb0cd;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #3e001d;
+  --color-on-secondary-fixed: #3e0022;
+  --color-on-secondary-fixed-variant: #8c0053;
+
+  --color-tertiary: #7f3900;
+  --color-tertiary-container: #ffddb8;
+  --color-tertiary-fixed: #ffddb8;
+  --color-tertiary-fixed-dim: #ffb95f;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #2a1700;
+  --color-on-tertiary-fixed: #2a1700;
+  --color-on-tertiary-fixed-variant: #653e00;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #410002;
+
+  --color-success: #059669;
+  --color-on-surface: #1c1b1e;
+  --color-on-surface-variant: #49454e;
+  --color-on-background: #1c1b1e;
+  --color-outline: #7a7289;
+  --color-outline-variant: #cac3d5;
+  --color-border: #e4e4e7;
+  --color-inverse-surface: #313032;
+  --color-inverse-on-surface: #f3eff4;
+
+  --color-text-primary: #18181b;
+  --color-text-secondary: #52525b;
+}
+
+/* Dark theme — overrides the @theme :root vars above */
+.dark {
   --color-background: #131315;
   --color-surface: #18181b;
   --color-surface-hover: #27272a;

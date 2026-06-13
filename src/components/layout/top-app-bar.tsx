@@ -1,8 +1,12 @@
-import Image from "next/image";
-import { Icon } from "@/components/ui/icon";
-import { SearchInput } from "@/components/ui/search-input";
+"use client";
 
-type NavItem = { label: string; href: string; active?: boolean };
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { SearchInput } from "@/components/ui/search-input";
+import { Icon } from "@/components/ui/icon";
+import { useThemeStore } from "@/stores/theme.store";
+
+type NavItem = { label: string; href: string };
 
 type TopAppBarProps = {
   navItems?: NavItem[];
@@ -10,48 +14,67 @@ type TopAppBarProps = {
 };
 
 export function TopAppBar({ navItems = [], avatarUrl }: TopAppBarProps) {
+  const pathname = usePathname();
+  const { theme, toggleTheme } = useThemeStore();
+
   return (
     <header className="bg-surface text-primary border-b border-outline-variant flex justify-between items-center w-full px-lg h-16 sticky top-0 z-50">
       <div className="flex items-center gap-xl">
-        <span className="font-sans text-4xl font-bold text-primary tracking-tighter leading-none">
+        <Link href="/dashboard" className="font-sans text-4xl font-bold text-primary tracking-tighter leading-none">
           Runner_X
-        </span>
+        </Link>
         <nav className="hidden md:flex gap-lg items-center">
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               className={
-                item.active
+                pathname.startsWith(item.href)
                   ? "text-primary font-bold font-mono text-sm"
                   : "text-on-surface-variant hover:bg-surface-hover transition-colors font-mono text-sm px-sm py-xs rounded"
               }
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
       </div>
       <div className="flex items-center gap-md">
-        <SearchInput placeholder="Search components..." />
+        <SearchInput placeholder="Search..." />
         <div className="flex items-center gap-sm">
-          <Icon
-            name="notifications"
-            className="hover:bg-surface-hover p-xs rounded cursor-pointer transition-colors"
-          />
-          <Icon
-            name="account_balance_wallet"
-            className="hover:bg-surface-hover p-xs rounded cursor-pointer transition-colors"
-          />
-          {avatarUrl && (
-            <Image
-              src={avatarUrl}
-              alt="Profile"
-              width={32}
-              height={32}
-              className="w-8 h-8 rounded-full border border-primary/50 object-cover"
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            className="hover:bg-surface-hover p-xs rounded cursor-pointer transition-colors text-on-surface-variant"
+          >
+            <Icon name={theme === "dark" ? "light_mode" : "dark_mode"} />
+          </button>
+          <Link href="/notifications">
+            <Icon
+              name="notifications"
+              className="hover:bg-surface-hover p-xs rounded cursor-pointer transition-colors"
             />
-          )}
+          </Link>
+          <Link href="/earnings">
+            <Icon
+              name="account_balance_wallet"
+              className="hover:bg-surface-hover p-xs rounded cursor-pointer transition-colors"
+            />
+          </Link>
+          <Link href="/profile">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt="Profile"
+                className="w-8 h-8 rounded-full border border-primary/50 object-cover"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
+                <Icon name="person" size={16} className="text-primary" />
+              </div>
+            )}
+          </Link>
         </div>
       </div>
     </header>
