@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { db } from "@/db";
-import { jobs, messages } from "@/db/schema";
-import { eq } from "drizzle-orm";
 
 export async function POST(
   _request: Request,
@@ -13,28 +11,23 @@ export async function POST(
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
-  const [job] = await db.select().from(jobs).where(eq(jobs.id, id)).limit(1);
+  const { data: job } = await db.from("jobs").select("*").eq("id", id).single();
 
   if (!job) return NextResponse.json({ error: "Job not found" }, { status: 404 });
-  if (job.status !== "posted") {
-    return NextResponse.json({ error: "Job not available" }, { status: 400 });
-  }
-  if (job.requesterId === userId) {
-    return NextResponse.json({ error: "Cannot accept own job" }, { status: 400 });
-  }
+  if (job.status !== "posted") return NextResponse.json({ error: "Job not available" }, { status: 400 });
+  if (job.requester_id === userId) return NextResponse.json({ error: "Cannot accept own job" }, { status: 400 });
 
-  const [updated] = await db
-    .update(jobs)
-    .set({ runnerId: userId, status: "accepted", updatedAt: new Date() })
-    .where(eq(jobs.id, id))
-    .returning();
+  const { data: updated } = await db
+    .from("jobs")
+    .update({ runner_id: userId, status: "accepted" })
+    .eq("id", id)
+    .select()
+    .single();
 
-  // System message
-  await db.insert(messages).values({
-    jobId: id,
-    senderId: userId,
+  await db.from("messages").insert({
+    job_id: id,
+    sender_id: userId,
     content: "Runner has accepted this quest!",
-    isSystem: true,
   });
 
   return NextResponse.json({ job: updated });

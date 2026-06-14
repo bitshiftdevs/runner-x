@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Outfit } from "next/font/google";
-import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
 
-const outfit = Outfit( {
+const outfit = Outfit({
   variable: "--font-sans",
   subsets: ["latin"],
-} );
+});
 
-const jetbrainsMono = JetBrains_Mono( {
+const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-} );
+});
 
 export const metadata: Metadata = {
   title: "Runner_X — Campus Hustle, Delivered Fast",
@@ -19,11 +18,11 @@ export const metadata: Metadata = {
     "Student-only hyper-local dispatch marketplace for university campuses in Ghana",
 };
 
-export default function RootLayout( {
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}> ) {
+}>) {
   return (
     <html
       lang="en"
@@ -37,7 +36,7 @@ export default function RootLayout( {
         />
       </head>
       <body className="min-h-full flex flex-col font-sans">
-        <ThemeProvider>{children}</ThemeProvider>
+        {children}
       </body>
     </html>
   );

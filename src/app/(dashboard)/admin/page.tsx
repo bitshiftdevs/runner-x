@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { api, formatCurrency, formatRelativeTime } from "@/lib";
 import { Icon } from "@/components/ui/icon";

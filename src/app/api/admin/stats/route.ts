@@ -1,24 +1,19 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { jobs, profiles } from "@/db/schema";
-import { eq, and, gte, isNotNull, count } from "drizzle-orm";
 
 export async function GET() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const [pending] = await db.select({ count: count() }).from(profiles)
-    .where(and(isNotNull(profiles.studentIdUrl), eq(profiles.studentIdVerified, false)));
-
-  const [disputes] = await db.select({ count: count() }).from(jobs)
-    .where(eq(jobs.status, "disputed"));
-
-  const [daily] = await db.select({ count: count() }).from(jobs)
-    .where(gte(jobs.createdAt, today));
+  const [pending, disputes, daily] = await Promise.all([
+    db.from("profiles").select("*", { count: "exact", head: true }).eq("student_id_status", "pending").not("avatar_url", "is", null),
+    db.from("jobs").select("*", { count: "exact", head: true }).eq("status", "disputed"),
+    db.from("jobs").select("*", { count: "exact", head: true }).gte("created_at", today.toISOString()),
+  ]);
 
   return NextResponse.json({
-    pendingVerifications: Number(pending.count),
-    activeDisputes: Number(disputes.count),
-    dailyJobs: Number(daily.count),
+    pendingVerifications: pending.count ?? 0,
+    activeDisputes: disputes.count ?? 0,
+    dailyJobs: daily.count ?? 0,
   });
 }

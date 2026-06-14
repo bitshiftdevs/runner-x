@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { Icon, Toggle, SectionHeader } from "@/components/ui";
 import { formatRelativeTime, api } from "@/lib";

@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { db } from "@/db";
-import { profiles } from "@/db/schema";
-import { eq } from "drizzle-orm";
 
 async function getUserId() {
   const cookieStore = await cookies();
@@ -11,43 +9,35 @@ async function getUserId() {
 
 export async function GET() {
   const userId = await getUserId();
-  if (!userId) {
-    return NextResponse.json({ user: null }, { status: 401 });
-  }
+  if (!userId) return NextResponse.json({ user: null }, { status: 401 });
 
-  const [user] = await db
-    .select()
-    .from(profiles)
-    .where(eq(profiles.id, userId))
-    .limit(1);
+  const { data: user } = await db
+    .from("profiles")
+    .select("*")
+    .eq("id", userId)
+    .single();
 
-  if (!user) {
-    return NextResponse.json({ user: null }, { status: 401 });
-  }
-
+  if (!user) return NextResponse.json({ user: null }, { status: 401 });
   return NextResponse.json({ user });
 }
 
 export async function PATCH(request: Request) {
   const userId = await getUserId();
-  if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
-  const { fullName, bio, role, photoUrl } = body;
-
   const updates: Record<string, unknown> = {};
-  if (fullName !== undefined) updates.fullName = fullName;
-  if (bio !== undefined) updates.bio = bio;
-  if (role !== undefined) updates.role = role;
-  if (photoUrl !== undefined) updates.photoUrl = photoUrl;
+  if (body.fullName !== undefined) updates.full_name = body.fullName;
+  if (body.bio !== undefined) updates.bio = body.bio;
+  if (body.role !== undefined) updates.role = body.role;
+  if (body.photoUrl !== undefined) updates.avatar_url = body.photoUrl;
 
-  const [user] = await db
-    .update(profiles)
-    .set(updates)
-    .where(eq(profiles.id, userId))
-    .returning();
+  const { data: user } = await db
+    .from("profiles")
+    .update(updates)
+    .eq("id", userId)
+    .select()
+    .single();
 
   return NextResponse.json({ user });
 }
