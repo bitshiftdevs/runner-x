@@ -24,7 +24,7 @@ export default function ContactPage() {
         <div className="bg-surface border border-outline-variant rounded-xl p-lg space-y-sm">
           <span className="material-symbols-outlined text-2xl text-primary">location_on</span>
           <h3 className="font-sans text-lg font-semibold text-on-surface">Location</h3>
-          <p className="font-mono text-sm text-on-surface-variant">KNUST Campus, Kumasi, Ghana</p>
+          <p className="font-mono text-sm text-on-surface-variant">Kumasi, Ghana</p>
         </div>
         <div className="bg-surface border border-outline-variant rounded-xl p-lg space-y-sm">
           <span className="material-symbols-outlined text-2xl text-primary">schedule</span>

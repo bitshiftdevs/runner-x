@@ -18,7 +18,7 @@ export default function AboutPage() {
       <section className="text-center space-y-md">
         <h1 className="font-sans text-4xl md:text-5xl font-black text-on-surface">About Runner_X</h1>
         <p className="font-mono text-sm text-on-surface-variant max-w-[42rem] mx-auto">
-          Runner_X is a student-only, hyper-local dispatch marketplace for university campuses in Ghana — starting with KNUST, Kumasi.
+          Runner_X is a student-only, hyper-local dispatch marketplace for university campuses across Ghana.
         </p>
       </section>
 

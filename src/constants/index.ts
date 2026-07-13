@@ -2,7 +2,7 @@ import type { JobCategory, UrgencyLevel } from "@/types";
 
 export const APP_NAME = "Runner_X";
 export const APP_TAGLINE = "Campus Hustle, Delivered Fast";
-export const DEFAULT_CAMPUS = "KNUST";
+export const DEFAULT_CAMPUS = "";
 export const CURRENCY = "GHS";
 export const CURRENCY_SYMBOL = "₵";
 

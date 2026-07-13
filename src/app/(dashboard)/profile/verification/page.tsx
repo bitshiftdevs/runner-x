@@ -124,7 +124,7 @@ export default function VerificationPage() {
               <div className="flex justify-between items-center py-sm border-b border-outline-variant/30">
                 <span className="text-sm text-text-secondary">Institution</span>
                 <span className="font-mono text-sm">
-                  {user?.campus ?? "KNUST"}, Kumasi
+                  {user?.campus ?? "Unknown"}
                 </span>
               </div>
               <div className="flex justify-between items-center py-sm border-b border-outline-variant/30">

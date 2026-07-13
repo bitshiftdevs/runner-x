@@ -105,7 +105,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="font-sans text-xl font-bold text-on-surface">10. Contact Us</h2>
           <p>If you have questions about this Privacy Policy, contact us at:</p>
           <p className="text-primary">privacy@runnerx.app</p>
-          <p>Runner_X, KNUST Campus, Kumasi, Ghana</p>
+          <p>Runner_X, Kumasi, Ghana</p>
         </section>
       </div>
     </div>

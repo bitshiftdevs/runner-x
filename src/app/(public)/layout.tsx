@@ -60,7 +60,7 @@ function Footer() {
               <p className="font-sans text-lg font-bold text-primary tracking-tight">Runner_X</p>
             </div>
             <p className="text-xs text-on-surface-variant mt-sm">Campus Hustle, Delivered Fast.</p>
-            <p className="text-xs text-on-surface-variant mt-xs">Built for KNUST students 🇬🇭</p>
+            <p className="text-xs text-on-surface-variant mt-xs">Built for Ghana students 🇬🇭</p>
           </div>
           <div>
             <p className="text-xs text-on-surface-variant uppercase tracking-widest mb-sm">Pages</p>

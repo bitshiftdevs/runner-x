@@ -253,7 +253,7 @@ export default function NewQuestPage() {
               value={vendorName}
               onChange={(e) => setVendorName(e.target.value)}
               className="w-full bg-surface border border-outline-variant rounded-lg px-md py-sm text-on-surface focus:outline-none focus:border-primary"
-              placeholder="e.g., KFC KNUST"
+              placeholder="e.g., KFC near campus"
             />
           </div>
 

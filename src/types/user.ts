@@ -1,4 +1,4 @@
-export type UserRole = "requester" | "runner" | "both";
+export type UserRole = "requester" | "runner" | "both" | "admin";
 
 export type Profile = {
   id: string;

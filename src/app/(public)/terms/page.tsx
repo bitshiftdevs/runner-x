@@ -129,7 +129,7 @@ export default function TermsPage() {
           <h2 className="font-sans text-xl font-bold text-on-surface">13. Contact</h2>
           <p>For questions about these Terms, contact us at:</p>
           <p className="text-primary">legal@runnerx.app</p>
-          <p>Runner_X, KNUST Campus, Kumasi, Ghana</p>
+          <p>Runner_X, Kumasi, Ghana</p>
         </section>
       </div>
     </div>
