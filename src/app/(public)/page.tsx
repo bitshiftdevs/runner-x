@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AppStoreButtons } from "@/components/ui/app-store-buttons";
 
 export const metadata: Metadata = {
   title: "Runner_X — Campus Hustle, Delivered Fast",
@@ -73,7 +74,7 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--color-primary)/0.08,transparent_70%)]" />
         <div className="relative text-center w-full max-w-4xl mx-auto space-y-lg">
           <div className="inline-block font-mono text-xs bg-primary/10 text-primary border border-primary/30 px-md py-xs rounded-full">
-            🇬 Now live on Ghana campuses
+            🇬🇭 Now live on Ghana campuses
           </div>
           <h1 className="font-sans text-5xl sm:text-6xl md:text-7xl font-black tracking-tight text-on-surface leading-[1.1]">
             Campus Hustle,
@@ -84,18 +85,10 @@ export default function LandingPage() {
             The student-only marketplace connecting requesters with runners for
             hyper-local campus errands.
           </p>
-          <div className="flex flex-col sm:flex-row gap-md justify-center pt-md">
-            <a
-              href="https://play.google.com/store/apps/details?id=com.prodigy.runner_x"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-sm bg-primary text-on-primary font-mono text-sm px-xl py-md rounded-xl hover:glow-primary transition-all active:scale-95"
-            >
-              <span className="material-symbols-outlined text-[20px]">
-                download
-              </span>
-              Download on Play Store
-            </a>
+          <div className="pt-md">
+            <AppStoreButtons />
+          </div>
+          <div className="pt-sm">
             <Link
               href="/about"
               className="inline-flex items-center justify-center gap-sm border border-outline-variant text-on-surface font-mono text-sm px-xl py-md rounded-xl hover:border-primary hover:text-primary transition-all"
@@ -228,17 +221,7 @@ export default function LandingPage() {
           <p className="font-mono text-sm text-on-surface-variant">
             Download the app and join the campus hustle
           </p>
-          <a
-            href="https://play.google.com/store/apps/details?id=com.prodigy.runner_x"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-sm bg-primary text-on-primary font-mono text-sm px-xl py-md rounded-xl hover:glow-primary transition-all active:scale-95"
-          >
-            <span className="material-symbols-outlined text-[20px]">
-              download
-            </span>
-            Get Runner_X on Android
-          </a>
+          <AppStoreButtons />
         </div>
       </section>
     </div>
