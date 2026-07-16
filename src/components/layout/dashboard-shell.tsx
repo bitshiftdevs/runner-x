@@ -45,7 +45,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background">
       <header className="lg:hidden bg-surface-dim z-40 w-full flex justify-between items-center px-md py-md border-b border-outline-variant sticky top-0">
-        <h1 className="font-sans text-2xl font-black text-primary tracking-tighter">Runner_X</h1>
+        <h1 className="font-sans text-2xl font-black text-primary tracking-tighter">Runnerx</h1>
         <div className="flex items-center gap-md">
           <Link href="/notifications">
             <Icon name="notifications" className="text-on-surface-variant hover:text-primary transition-colors" />

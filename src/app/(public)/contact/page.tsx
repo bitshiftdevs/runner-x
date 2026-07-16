@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact — Runner_X",
-  description: "Get in touch with the Runner_X team for support, partnerships, or inquiries.",
+  title: "Contact — Runnerx",
+  description: "Get in touch with the Runnerx team for support, partnerships, or inquiries.",
 };
 
 export default function ContactPage() {
@@ -41,7 +41,7 @@ export default function ContactPage() {
       <section className="bg-surface-container-lowest border border-outline-variant rounded-xl p-xl space-y-md text-center">
         <h2 className="font-sans text-xl font-bold text-on-surface">For Business & Partnerships</h2>
         <p className="font-mono text-sm text-on-surface-variant">
-          Interested in partnering with Runner_X or bringing us to your campus? Email us at:
+          Interested in partnering with Runnerx or bringing us to your campus? Email us at:
         </p>
         <p className="font-mono text-sm text-primary">partnerships@runnerx.app</p>
       </section>

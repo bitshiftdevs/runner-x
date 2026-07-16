@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions — Runner_X",
-  description: "Terms and Conditions for using the Runner_X mobile application and services.",
+  title: "Terms & Conditions — Runnerx",
+  description: "Terms and Conditions for using the Runnerx mobile application and services.",
 };
 
 export default function TermsPage() {
@@ -14,7 +14,7 @@ export default function TermsPage() {
       <div className="space-y-xl font-mono text-sm text-on-surface-variant leading-relaxed">
         <section className="space-y-sm">
           <h2 className="font-sans text-xl font-bold text-on-surface">1. Acceptance of Terms</h2>
-          <p>By accessing or using Runner_X (&quot;the Service&quot;), you agree to be bound by these Terms and Conditions. If you do not agree, do not use the Service.</p>
+          <p>By accessing or using Runnerx (&quot;the Service&quot;), you agree to be bound by these Terms and Conditions. If you do not agree, do not use the Service.</p>
         </section>
 
         <section className="space-y-sm">
@@ -41,7 +41,7 @@ export default function TermsPage() {
 
         <section className="space-y-sm">
           <h2 className="font-sans text-xl font-bold text-on-surface">4. Service Description</h2>
-          <p>Runner_X is a dispatch marketplace that connects Requesters (users posting errands) with Runners (users fulfilling errands). The platform:</p>
+          <p>Runnerx is a dispatch marketplace that connects Requesters (users posting errands) with Runners (users fulfilling errands). The platform:</p>
           <ul className="list-disc list-inside space-y-xs pl-md">
             <li>Facilitates matching between requesters and runners</li>
             <li>Calculates and collects a transparent service fee</li>
@@ -88,7 +88,7 @@ export default function TermsPage() {
 
         <section className="space-y-sm">
           <h2 className="font-sans text-xl font-bold text-on-surface">8. Limitation of Liability</h2>
-          <p>Runner_X is a marketplace platform. We are not responsible for:</p>
+          <p>Runnerx is a marketplace platform. We are not responsible for:</p>
           <ul className="list-disc list-inside space-y-xs pl-md">
             <li>The quality or condition of items picked up or delivered</li>
             <li>Actions of individual users outside the platform</li>
@@ -112,7 +112,7 @@ export default function TermsPage() {
 
         <section className="space-y-sm">
           <h2 className="font-sans text-xl font-bold text-on-surface">10. Intellectual Property</h2>
-          <p>The Runner_X name, logo, and all associated branding are proprietary. You may not use our branding without written permission.</p>
+          <p>The Runnerx name, logo, and all associated branding are proprietary. You may not use our branding without written permission.</p>
         </section>
 
         <section className="space-y-sm">
@@ -129,7 +129,7 @@ export default function TermsPage() {
           <h2 className="font-sans text-xl font-bold text-on-surface">13. Contact</h2>
           <p>For questions about these Terms, contact us at:</p>
           <p className="text-primary">legal@runnerx.app</p>
-          <p>Runner_X, Kumasi, Ghana</p>
+          <p>Runnerx, Kumasi, Ghana</p>
         </section>
       </div>
     </div>

@@ -21,7 +21,7 @@ export function TopAppBar({ navItems = [], avatarUrl }: TopAppBarProps) {
     <header className="bg-surface text-primary border-b border-outline-variant flex justify-between items-center w-full px-lg h-16 sticky top-0 z-50">
       <div className="flex items-center gap-xl">
         <Link href="/dashboard" className="font-sans text-4xl font-bold text-primary tracking-tighter leading-none">
-          Runner_X
+          Runnerx
         </Link>
         <nav className="hidden md:flex gap-lg items-center">
           {navItems.map((item) => (

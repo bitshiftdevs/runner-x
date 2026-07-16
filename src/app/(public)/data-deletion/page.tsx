@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Data Deletion — Runner_X",
-  description: "Request deletion of your Runner_X account and personal data.",
+  title: "Data Deletion — Runnerx",
+  description: "Request deletion of your Runnerx account and personal data.",
 };
 
 export default function DataDeletionPage() {
@@ -14,14 +14,14 @@ export default function DataDeletionPage() {
       <div className="space-y-xl font-mono text-sm text-on-surface-variant leading-relaxed">
         <section className="space-y-sm">
           <h2 className="font-sans text-xl font-bold text-on-surface">Delete Your Account</h2>
-          <p>You have the right to request deletion of your Runner_X account and all associated personal data. Once deleted, this action cannot be undone.</p>
+          <p>You have the right to request deletion of your Runnerx account and all associated personal data. Once deleted, this action cannot be undone.</p>
         </section>
 
         <section className="space-y-sm">
           <h2 className="font-sans text-xl font-bold text-on-surface">How to Delete Your Account</h2>
           <h3 className="font-sans text-base font-semibold text-on-surface">Option 1: In-App Deletion</h3>
           <ol className="list-decimal list-inside space-y-xs pl-md">
-            <li>Open the Runner_X app</li>
+            <li>Open the Runnerx app</li>
             <li>Go to Settings</li>
             <li>Tap &quot;Account&quot;</li>
             <li>Tap &quot;Delete Account&quot;</li>

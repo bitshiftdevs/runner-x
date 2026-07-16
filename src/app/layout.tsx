@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Runner_X — Campus Hustle, Delivered Fast",
+  title: "Runnerx — Campus Hustle, Delivered Fast",
   description:
     "Student-only hyper-local dispatch marketplace for university campuses in Ghana",
 };

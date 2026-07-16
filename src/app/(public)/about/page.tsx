@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About — Runner_X",
-  description: "Learn about Runner_X, the student-only dispatch marketplace for university campuses in Ghana.",
+  title: "About — Runnerx",
+  description: "Learn about Runnerx, the student-only dispatch marketplace for university campuses in Ghana.",
 };
 
 const values = [
@@ -16,9 +16,9 @@ export default function AboutPage() {
   return (
     <div className="w-full max-w-5xl mx-auto px-lg py-3xl space-y-3xl">
       <section className="text-center space-y-md">
-        <h1 className="font-sans text-4xl md:text-5xl font-black text-on-surface">About Runner_X</h1>
+        <h1 className="font-sans text-4xl md:text-5xl font-black text-on-surface">About Runnerx</h1>
         <p className="font-mono text-sm text-on-surface-variant max-w-[42rem] mx-auto">
-          Runner_X is a student-only, hyper-local dispatch marketplace for university campuses across Ghana.
+          Runnerx is a student-only, hyper-local dispatch marketplace for university campuses across Ghana.
         </p>
       </section>
 

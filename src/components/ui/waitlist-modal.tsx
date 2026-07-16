@@ -72,7 +72,7 @@ export function WaitlistModal({ open, onClose }: WaitlistModalProps) {
             </div>
             <h3 className="font-sans text-xl font-bold text-on-surface">You&apos;re on the list!</h3>
             <p className="font-mono text-sm text-on-surface-variant">
-              We&apos;ll notify you as soon as Runner_X is available on iOS.
+              We&apos;ll notify you as soon as Runnerx is available on iOS.
             </p>
             <button
               onClick={onClose}
@@ -92,7 +92,7 @@ export function WaitlistModal({ open, onClose }: WaitlistModalProps) {
                 iOS Coming Soon
               </h3>
               <p className="font-mono text-sm text-on-surface-variant">
-                Join the waitlist and be the first to know when Runner_X launches on iPhone.
+                Join the waitlist and be the first to know when Runnerx launches on iPhone.
               </p>
             </div>
 

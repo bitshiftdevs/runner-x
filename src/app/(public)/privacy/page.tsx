@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Runner_X",
-  description: "Privacy Policy for Runner_X mobile application and web services.",
+  title: "Privacy Policy — Runnerx",
+  description: "Privacy Policy for Runnerx mobile application and web services.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
       <div className="space-y-xl font-mono text-sm text-on-surface-variant leading-relaxed">
         <section className="space-y-sm">
           <h2 className="font-sans text-xl font-bold text-on-surface">1. Introduction</h2>
-          <p>Runner_X (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) operates the Runner_X mobile application and website (collectively, the &quot;Service&quot;). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our Service.</p>
+          <p>Runnerx (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) operates the Runnerx mobile application and website (collectively, the &quot;Service&quot;). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our Service.</p>
         </section>
 
         <section className="space-y-sm">
@@ -105,7 +105,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="font-sans text-xl font-bold text-on-surface">10. Contact Us</h2>
           <p>If you have questions about this Privacy Policy, contact us at:</p>
           <p className="text-primary">privacy@runnerx.app</p>
-          <p>Runner_X, Kumasi, Ghana</p>
+          <p>Runnerx, Kumasi, Ghana</p>
         </section>
       </div>
     </div>
