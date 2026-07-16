@@ -72,7 +72,7 @@ export default function AboutPage() {
       <section className="text-center space-y-md bg-surface-container-lowest border border-outline-variant rounded-xl p-xl">
         <h2 className="font-sans text-2xl font-bold text-on-surface">Contact Us</h2>
         <p className="font-mono text-sm text-on-surface-variant">Have questions? Reach out to our team.</p>
-        <p className="font-mono text-sm text-primary">support@runnerx.app</p>
+        <p className="font-mono text-sm text-primary">admins@bitshiftdevs.com</p>
       </section>
     </div>
   );

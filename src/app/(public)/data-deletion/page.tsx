@@ -29,7 +29,7 @@ export default function DataDeletionPage() {
           </ol>
 
           <h3 className="font-sans text-base font-semibold text-on-surface mt-md">Option 2: Email Request</h3>
-          <p>Send an email to <strong className="text-primary">privacy@runnerx.app</strong> with:</p>
+          <p>Send an email to <strong className="text-primary">admins@bitshiftdevs.com</strong> with:</p>
           <ul className="list-disc list-inside space-y-xs pl-md">
             <li>Subject: &quot;Account Deletion Request&quot;</li>
             <li>Your registered phone number</li>
@@ -68,7 +68,7 @@ export default function DataDeletionPage() {
         <section className="bg-surface border border-outline-variant rounded-xl p-lg space-y-sm">
           <h2 className="font-sans text-xl font-bold text-on-surface">Need Help?</h2>
           <p>If you have questions about data deletion or want to know what data we hold about you, contact our privacy team:</p>
-          <p className="text-primary">privacy@runnerx.app</p>
+          <p className="text-primary">admins@bitshiftdevs.com</p>
         </section>
       </div>
     </div>

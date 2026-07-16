@@ -88,7 +88,7 @@ export default function PrivacyPolicyPage() {
             <li>Withdraw consent for location tracking at any time</li>
             <li>Export your data in a portable format</li>
           </ul>
-          <p>To exercise these rights, contact us at <strong className="text-primary">privacy@runnerx.app</strong> or use the in-app data deletion feature.</p>
+          <p>To exercise these rights, contact us at <strong className="text-primary">admins@bitshiftdevs.com</strong> or use the in-app data deletion feature.</p>
         </section>
 
         <section className="space-y-sm">
@@ -104,7 +104,7 @@ export default function PrivacyPolicyPage() {
         <section className="space-y-sm">
           <h2 className="font-sans text-xl font-bold text-on-surface">10. Contact Us</h2>
           <p>If you have questions about this Privacy Policy, contact us at:</p>
-          <p className="text-primary">privacy@runnerx.app</p>
+          <p className="text-primary">admins@bitshiftdevs.com</p>
           <p>Runnerx, Kumasi, Ghana</p>
         </section>
       </div>

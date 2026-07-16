@@ -101,26 +101,27 @@ export function HeroSection() {
           </Link>
         </motion.div>
 
-        {/* Scroll indicator */}
+      </div>
+
+      {/* Scroll indicator - positioned relative to the section */}
+      <motion.div
+        className="absolute bottom-6 left-1/2 -translate-x-1/2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2 }}
+      >
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
+          className="w-6 h-10 border-2 border-outline-variant rounded-full flex items-start justify-center p-1.5"
+          animate={{ borderColor: ["var(--color-outline-variant)", "var(--color-primary)", "var(--color-outline-variant)"] }}
+          transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
         >
           <motion.div
-            className="w-6 h-10 border-2 border-outline-variant rounded-full flex items-start justify-center p-1.5"
-            animate={{ borderColor: ["var(--color-outline-variant)", "var(--color-primary)", "var(--color-outline-variant)"] }}
-            transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
-          >
-            <motion.div
-              className="w-1.5 h-1.5 rounded-full bg-primary"
-              animate={{ y: [0, 16, 0] }}
-              transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-            />
-          </motion.div>
+            className="w-1.5 h-1.5 rounded-full bg-primary"
+            animate={{ y: [0, 16, 0] }}
+            transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+          />
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

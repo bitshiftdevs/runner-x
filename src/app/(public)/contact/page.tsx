@@ -19,7 +19,7 @@ export default function ContactPage() {
         <div className="bg-surface border border-outline-variant rounded-xl p-lg space-y-sm">
           <span className="material-symbols-outlined text-2xl text-primary">mail</span>
           <h3 className="font-sans text-lg font-semibold text-on-surface">Email</h3>
-          <p className="font-mono text-sm text-primary">support@runnerx.app</p>
+          <p className="font-mono text-sm text-primary">admins@bitshiftdevs.com</p>
         </div>
         <div className="bg-surface border border-outline-variant rounded-xl p-lg space-y-sm">
           <span className="material-symbols-outlined text-2xl text-primary">location_on</span>
@@ -43,7 +43,7 @@ export default function ContactPage() {
         <p className="font-mono text-sm text-on-surface-variant">
           Interested in partnering with Runnerx or bringing us to your campus? Email us at:
         </p>
-        <p className="font-mono text-sm text-primary">partnerships@runnerx.app</p>
+        <p className="font-mono text-sm text-primary">admins@bitshiftdevs.com</p>
       </section>
     </div>
   );
