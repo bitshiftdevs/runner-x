@@ -10,7 +10,9 @@ interface WaitlistModalProps {
 
 export function WaitlistModal({ open, onClose }: WaitlistModalProps) {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
   if (!open) return null;
@@ -52,7 +54,7 @@ export function WaitlistModal({ open, onClose }: WaitlistModalProps) {
 
       {/* Modal */}
       <div
-        className="relative w-full max-w-md bg-surface border border-outline-variant rounded-2xl p-xl space-y-lg animate-in fade-in zoom-in-95 duration-200"
+        className="relative w-full max-w-[28rem] bg-surface border border-outline-variant rounded-2xl p-xl space-y-lg animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -68,9 +70,13 @@ export function WaitlistModal({ open, onClose }: WaitlistModalProps) {
         {status === "success" ? (
           <div className="text-center space-y-md py-lg">
             <div className="w-16 h-16 mx-auto rounded-full bg-success/10 border border-success/30 flex items-center justify-center">
-              <span className="material-symbols-outlined text-3xl text-success">check_circle</span>
+              <span className="material-symbols-outlined text-3xl text-success">
+                check_circle
+              </span>
             </div>
-            <h3 className="font-sans text-xl font-bold text-on-surface">You&apos;re on the list!</h3>
+            <h3 className="font-sans text-xl font-bold text-on-surface">
+              You&apos;re on the list!
+            </h3>
             <p className="font-mono text-sm text-on-surface-variant">
               We&apos;ll notify you as soon as Runnerx is available on iOS.
             </p>
@@ -86,13 +92,19 @@ export function WaitlistModal({ open, onClose }: WaitlistModalProps) {
           <>
             <div className="text-center space-y-sm">
               <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center">
-                <span className="material-symbols-outlined text-2xl text-primary">phone_iphone</span>
+                <span className="material-symbols-outlined text-2xl text-primary">
+                  phone_iphone
+                </span>
               </div>
-              <h3 id="waitlist-title" className="font-sans text-xl font-bold text-on-surface">
+              <h3
+                id="waitlist-title"
+                className="font-sans text-xl font-bold text-on-surface"
+              >
                 iOS Coming Soon
               </h3>
               <p className="font-mono text-sm text-on-surface-variant">
-                Join the waitlist and be the first to know when Runnerx launches on iPhone.
+                Join the waitlist and be the first to know when Runnerx launches
+                on iPhone.
               </p>
             </div>
 
@@ -107,7 +119,7 @@ export function WaitlistModal({ open, onClose }: WaitlistModalProps) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your.email@university.edu.gh"
+                  placeholder="your.email@gmail.com"
                   className="w-full bg-surface-container border border-outline-variant rounded-xl px-lg py-md font-mono text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary transition-colors"
                 />
               </div>
@@ -123,12 +135,16 @@ export function WaitlistModal({ open, onClose }: WaitlistModalProps) {
               >
                 {status === "loading" ? (
                   <>
-                    <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
+                    <span className="material-symbols-outlined text-[18px] animate-spin">
+                      progress_activity
+                    </span>
                     Joining...
                   </>
                 ) : (
                   <>
-                    <span className="material-symbols-outlined text-[18px]">notifications_active</span>
+                    <span className="material-symbols-outlined text-[18px]">
+                      notifications_active
+                    </span>
                     Notify Me
                   </>
                 )}
