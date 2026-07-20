@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { db } from "@/db";
-import { messages } from "@/db/schema";
-import { eq, asc } from "drizzle-orm";
 
 async function getUserId() {
   const cookieStore = await cookies();
@@ -17,13 +15,13 @@ export async function GET(request: Request) {
   const jobId = url.searchParams.get("jobId");
   if (!jobId) return NextResponse.json({ messages: [] });
 
-  const result = await db
-    .select()
-    .from(messages)
-    .where(eq(messages.jobId, jobId))
-    .orderBy(asc(messages.createdAt));
+  const { data: messages } = await db
+    .from("messages")
+    .select("*")
+    .eq("job_id", jobId)
+    .order("created_at", { ascending: true });
 
-  return NextResponse.json({ messages: result });
+  return NextResponse.json({ messages: messages ?? [] });
 }
 
 export async function POST(request: Request) {
@@ -31,19 +29,13 @@ export async function POST(request: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { jobId, content, imageUrl } = await request.json();
-  if (!jobId || !content) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-  }
+  if (!jobId || !content) return NextResponse.json({ error: "Missing fields" }, { status: 400 });
 
-  const [msg] = await db
-    .insert(messages)
-    .values({
-      jobId,
-      senderId: userId,
-      content,
-      imageUrl: imageUrl ?? null,
-    })
-    .returning();
+  const { data: msg } = await db
+    .from("messages")
+    .insert({ job_id: jobId, sender_id: userId, content, image_url: imageUrl ?? null })
+    .select()
+    .single();
 
   return NextResponse.json({ message: msg });
 }

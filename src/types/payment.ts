@@ -6,8 +6,11 @@ export type Payment = {
   userId: string;
   amount: number;
   currency: string;
-  provider: string;
+  channel: string | null;
+  payer: string | null;
   providerRef: string | null;
+  externalRef: string;
   status: PaymentStatus;
   createdAt: string;
+  updatedAt: string;
 };

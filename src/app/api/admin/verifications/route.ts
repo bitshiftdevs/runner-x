@@ -1,20 +1,20 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { profiles } from "@/db/schema";
-import { and, eq, isNotNull } from "drizzle-orm";
 
 export async function GET() {
-  const users = await db
-    .select({
-      id: profiles.id,
-      fullName: profiles.fullName,
-      phone: profiles.phone,
-      studentIdUrl: profiles.studentIdUrl,
-      campus: profiles.campus,
-      createdAt: profiles.createdAt,
-    })
-    .from(profiles)
-    .where(and(isNotNull(profiles.studentIdUrl), eq(profiles.studentIdVerified, false)));
+  const { data: users } = await db
+    .from("profiles")
+    .select("id, full_name, phone_number, avatar_url, default_campus, created_at")
+    .eq("student_id_status", "pending");
 
-  return NextResponse.json({ users });
+  return NextResponse.json({
+    users: (users ?? []).map((u) => ({
+      id: u.id,
+      fullName: u.full_name,
+      phone: u.phone_number,
+      studentIdUrl: u.avatar_url,
+      campus: u.default_campus,
+      createdAt: u.created_at,
+    })),
+  });
 }
