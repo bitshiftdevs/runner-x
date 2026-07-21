@@ -18,20 +18,20 @@ export function CtaSection() {
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
       <div className="w-full max-w-[1280px] mx-auto text-center relative z-10" style={{ display: "block", width: "100%" }}>
-        <FadeIn className="w-full" style={{ display: "block", width: "100%" }}>
+        <FadeIn className="w-full block">
           <h2 className="font-sans text-6xl md:text-8xl lg:text-[120px] font-black uppercase tracking-tighter leading-none text-white w-full" style={{ display: "block", width: "100%" }}>
             Stop waiting. <br/>
             <span className="text-primary italic">Start running.</span>
           </h2>
         </FadeIn>
         
-        <FadeIn delay={0.2} className="w-full mt-12 mb-16" style={{ display: "block", width: "100%" }}>
+        <FadeIn delay={0.2} className="w-full mt-12 mb-16 block">
           <p className="font-sans text-xl md:text-2xl text-white/70 mx-auto leading-relaxed" style={{ maxWidth: "600px" }}>
             The hyper-local campus dispatch network is live. Download the app and join the hustle today.
           </p>
         </FadeIn>
         
-        <FadeIn delay={0.4} className="w-full flex justify-center" style={{ display: "block", width: "100%" }}>
+        <FadeIn delay={0.4} className="w-full flex justify-center">
           <div className="flex justify-center md:scale-125 transition-transform">
             <AppStoreButtons />
           </div>
