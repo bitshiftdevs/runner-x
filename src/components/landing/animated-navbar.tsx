@@ -32,7 +32,7 @@ export function AnimatedNavbar() {
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: [0.25, 0.4, 0.25, 1] }}
     >
-      <div className="w-full max-w-7xl mx-auto px-lg flex items-center justify-between h-16">
+      <div className="w-full max-w-[1280px] mx-auto px-lg flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-sm group">
           <motion.div
