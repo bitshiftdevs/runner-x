@@ -6,36 +6,38 @@ import { FadeIn } from "@/components/animations/fade-in";
 
 export function CtaSection() {
   return (
-    <section className="py-3xl px-lg relative overflow-hidden">
-      {/* Animated border glow */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <motion.div
-          className="w-[600px] h-[600px] rounded-full border border-primary/10"
-          animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.3, 0.1, 0.3] }}
-          transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute w-[400px] h-[400px] rounded-full border border-primary/20"
-          animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 0.5 }}
-        />
-      </div>
+    <section id="cta" className="py-32 md:py-48 px-6 bg-[#0a0f0e] text-white relative overflow-hidden flex flex-col items-center justify-center min-h-[80vh]">
+      
+      {/* Background Graphic Elements */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/10 blur-[120px] pointer-events-none"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+        transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+      />
+      
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
-      <div className="w-full max-w-4xl mx-auto text-center space-y-lg relative">
-        <FadeIn>
-          <h2 className="font-sans text-3xl md:text-4xl font-bold text-on-surface">
-            Ready to get started?
+      <div className="w-full max-w-[1280px] mx-auto text-center relative z-10" style={{ display: "block", width: "100%" }}>
+        <FadeIn className="w-full" style={{ display: "block", width: "100%" }}>
+          <h2 className="font-sans text-6xl md:text-8xl lg:text-[120px] font-black uppercase tracking-tighter leading-none text-white w-full" style={{ display: "block", width: "100%" }}>
+            Stop waiting. <br/>
+            <span className="text-primary italic">Start running.</span>
           </h2>
         </FadeIn>
-        <FadeIn delay={0.1}>
-          <p className="font-mono text-sm text-on-surface-variant">
-            Download the app and join the campus hustle
+        
+        <FadeIn delay={0.2} className="w-full mt-12 mb-16" style={{ display: "block", width: "100%" }}>
+          <p className="font-sans text-xl md:text-2xl text-white/70 mx-auto leading-relaxed" style={{ maxWidth: "600px" }}>
+            The hyper-local campus dispatch network is live. Download the app and join the hustle today.
           </p>
         </FadeIn>
-        <FadeIn delay={0.2}>
-          <AppStoreButtons />
+        
+        <FadeIn delay={0.4} className="w-full flex justify-center" style={{ display: "block", width: "100%" }}>
+          <div className="flex justify-center md:scale-125 transition-transform">
+            <AppStoreButtons />
+          </div>
         </FadeIn>
       </div>
+      
     </section>
   );
 }

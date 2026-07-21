@@ -2,81 +2,92 @@
 
 import { motion } from "motion/react";
 import { FadeIn } from "@/components/animations/fade-in";
-import { CountUp } from "@/components/animations/count-up";
 
 export function EarnSection() {
   return (
-    <section className="py-3xl px-lg bg-surface-container-lowest relative overflow-hidden">
-      {/* Background decoration */}
-      <motion.div
-        className="absolute top-1/2 right-0 -translate-y-1/2 w-96 h-96 rounded-full bg-success/5 blur-3xl"
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-      />
+    <section className="py-24 md:py-32 bg-[#0a0f0e] text-white relative overflow-hidden flex items-center min-h-[90vh]">
+      
+      {/* Background Graphic Elements */}
+      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-white rounded-full blur-[100px]" />
+      </div>
 
-      <div className="w-full max-w-5xl mx-auto text-center space-y-lg relative">
-        <FadeIn>
-          <h2 className="font-sans text-3xl md:text-4xl font-bold text-on-surface">
-            Earn Money Between Classes
-          </h2>
-        </FadeIn>
-
-        <FadeIn delay={0.15}>
-          <p className="font-mono text-sm text-on-surface-variant max-w-[42rem] mx-auto">
-            Become a Runner and turn your free time into income. Accept quests
-            that fit your schedule, get paid instantly via Mobile Money.
-          </p>
-        </FadeIn>
-
-        <FadeIn delay={0.3}>
-          <motion.div
-            className="inline-flex items-center gap-md bg-surface border border-outline-variant rounded-xl px-xl py-md"
-            whileHover={{ scale: 1.02, boxShadow: "0 10px 40px -10px rgba(5, 150, 105, 0.2)" }}
-            transition={{ duration: 0.3 }}
-          >
-            <motion.span
-              className="material-symbols-outlined text-2xl text-success"
-              animate={{ rotateY: [0, 360] }}
-              transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", repeatDelay: 2 }}
+      <div className="w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24 relative z-10 flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
+        
+        {/* Left Side: Massive Typography */}
+        <div className="w-full lg:w-1/2 flex flex-col justify-center text-left">
+          <FadeIn direction="left" duration={0.8} className="w-full">
+            <h2 className="font-sans text-6xl md:text-8xl lg:text-[100px] font-black uppercase leading-[0.85] tracking-tighter mb-8 text-white">
+              Got a <br/>
+              <span className="text-primary italic">2-hour</span> <br/>
+              gap?
+            </h2>
+            <div className="w-24 h-2 bg-primary mb-8" />
+            <h3 className="font-sans text-4xl md:text-5xl font-bold mb-6 text-white">
+              Make it pay.
+            </h3>
+            <p className="font-sans text-lg md:text-xl text-white/70 mb-12 leading-relaxed" style={{ maxWidth: "512px" }}>
+              Don't just sit in the library. Open the app, accept a quest, and make money while walking to your next class. Work when you want, earn what you want.
+            </p>
+            <button 
+              onClick={() => document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-primary text-[#0a0f0e] px-10 py-5 rounded-full font-bold text-xl uppercase tracking-wider hover:bg-white transition-colors duration-300 w-full md:w-max text-center shadow-[0_0_40px_rgba(60,232,190,0.3)] hover:shadow-[0_0_60px_rgba(255,255,255,0.5)]"
             >
-              account_balance_wallet
-            </motion.span>
-            <div className="text-left">
-              <p className="font-mono text-xs text-on-surface-variant">
-                Average runner earns
-              </p>
-              <p className="font-sans text-2xl font-bold text-success">
-                ₵<CountUp end={50} duration={1.5} />–<CountUp end={150} duration={2} /> / day
-              </p>
-            </div>
-          </motion.div>
-        </FadeIn>
+              Become a Runner
+            </button>
+          </FadeIn>
+        </div>
 
-        {/* Stats row */}
-        <FadeIn delay={0.45}>
-          <div className="flex flex-wrap items-center justify-center gap-xl pt-lg">
-            <div className="text-center">
-              <p className="font-sans text-2xl font-bold text-on-surface">
-                <CountUp end={500} suffix="+" duration={2} />
-              </p>
-              <p className="font-mono text-xs text-on-surface-variant">Active Runners</p>
-            </div>
-            <div className="w-px h-8 bg-outline-variant" />
-            <div className="text-center">
-              <p className="font-sans text-2xl font-bold text-on-surface">
-                <CountUp end={3} suffix="k+" duration={1.8} />
-              </p>
-              <p className="font-mono text-xs text-on-surface-variant">Quests Completed</p>
-            </div>
-            <div className="w-px h-8 bg-outline-variant" />
-            <div className="text-center">
-              <p className="font-sans text-2xl font-bold text-on-surface">
-                <CountUp end={4} suffix=" campuses" duration={1.5} />
-              </p>
-              <p className="font-mono text-xs text-on-surface-variant">& Growing</p>
-            </div>
-          </div>
-        </FadeIn>
+        {/* Right Side: The Collage */}
+        <div className="w-full lg:w-1/2 relative h-[500px] md:h-[700px] flex items-center justify-center mt-12 lg:mt-0">
+          
+          <FadeIn direction="right" duration={0.8} delay={0.2} className="relative w-full h-full max-w-[450px] mx-auto">
+            
+            {/* The Main Avatar Graphic */}
+            <motion.div 
+              className="absolute inset-0 rounded-[3rem] overflow-hidden z-10 shadow-2xl shadow-black/50 border-4 border-white/10 bg-surface"
+              initial={{ rotate: -5 }}
+              whileInView={{ rotate: -2 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f0e] via-[#0a0f0e]/20 to-transparent z-10" />
+              <img 
+                src="/runner-avatar.jpg" 
+                alt="Runner" 
+                className="w-full h-full object-cover grayscale contrast-125 brightness-90 hover:grayscale-0 transition-all duration-700"
+              />
+            </motion.div>
+
+            {/* The Runner-X Logo Stamp */}
+            <motion.div 
+              className="absolute -bottom-12 -right-8 md:-right-16 z-20 w-48 h-48 md:w-64 md:h-64 bg-white rounded-full flex items-center justify-center p-8 border-8 border-primary shadow-2xl shadow-black/50"
+              initial={{ scale: 0, rotate: -90 }}
+              whileInView={{ scale: 1, rotate: 12 }}
+              transition={{ duration: 0.8, delay: 0.6, type: "spring" }}
+            >
+              <img 
+                src="/runner-x.png" 
+                alt="RunnerX" 
+                className="w-full h-full object-contain"
+              />
+            </motion.div>
+
+            {/* Floating Earnings Tag */}
+            <motion.div
+              className="absolute top-12 -left-8 md:-left-16 z-20 bg-white text-[#0a0f0e] px-6 py-4 rounded-2xl shadow-2xl font-bold font-sans text-2xl flex items-center gap-3 border-l-8 border-primary"
+              initial={{ x: -50, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
+              <span className="text-4xl text-primary material-symbols-outlined">payments</span>
+              +₵150.00 <span className="text-sm text-black/50 font-mono font-normal uppercase mt-1">Today</span>
+            </motion.div>
+
+          </FadeIn>
+          
+        </div>
+
       </div>
     </section>
   );

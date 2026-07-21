@@ -6,6 +6,7 @@ import { CategoriesSection } from "@/components/landing/categories-section";
 import { FeaturesSection } from "@/components/landing/features-section";
 import { HowItWorksSection } from "@/components/landing/how-it-works-section";
 import { EarnSection } from "@/components/landing/earn-section";
+import { FaqSection } from "@/components/landing/faq-section";
 import { CtaSection } from "@/components/landing/cta-section";
 
 export const metadata: Metadata = {
@@ -16,12 +17,13 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <div className="overflow-x-hidden">
+    <div className="w-full relative">
       <HeroSection />
       <CategoriesSection />
       <FeaturesSection />
       <HowItWorksSection />
       <EarnSection />
+      <FaqSection />
       <CtaSection />
     </div>
   );

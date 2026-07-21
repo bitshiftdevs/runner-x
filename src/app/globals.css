@@ -1,9 +1,8 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display",
-    "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "SF Mono", "JetBrains Mono", monospace;
+  --font-sans: var(--font-outfit, -apple-system, sans-serif);
+  --font-mono: var(--font-jetbrains, monospace);
 
   /* Spacing */
   --spacing-xs: 4px;
