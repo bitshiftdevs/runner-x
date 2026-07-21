@@ -2,91 +2,103 @@
 
 import { motion } from "motion/react";
 import { FadeIn } from "@/components/animations/fade-in";
-import { StaggerChildren, StaggerItem } from "@/components/animations/stagger-children";
 
 const features = [
   {
-    icon: "bolt",
-    title: "Instant Dispatch",
-    desc: "Post a job and get matched with a runner in minutes",
+    id: "skip-the-sun",
+    title: "Skip the Sun",
+    desc: "Don't sweat the 20-minute trek across campus. Let a runner handle the heat while you chill in the library.",
+    image: "/feature-sun.jpg",
+    flipped: false,
+    icon: "wb_sunny",
   },
   {
-    icon: "payments",
-    title: "Mobile Money",
-    desc: "Pay seamlessly via MoMo — no cash hassle",
+    id: "protect-your-time",
+    title: "Protect Your Time",
+    desc: "Got a deadline? Pay a small fee to stay focused on your assignments while we sort your errands.",
+    image: "/feature-time.jpg",
+    flipped: true,
+    icon: "schedule",
   },
   {
-    icon: "location_on",
-    title: "Live Tracking",
-    desc: "Watch your runner in real-time on campus",
-  },
-  {
-    icon: "verified_user",
-    title: "Student Verified",
-    desc: "Only verified Ghana university students can join",
-  },
-  {
+    id: "rate-runner",
+    title: "Rate & Reward",
+    desc: "Mutual ratings keep the community accountable. Tip your favorite runners and build trust on campus.",
+    image: "/rate-runner.jpg",
+    flipped: false,
     icon: "star",
-    title: "Rated & Trusted",
-    desc: "Mutual ratings keep the community accountable",
-  },
-  {
-    icon: "speed",
-    title: "Urgency Options",
-    desc: "Need it in 10 min? Set urgency for priority matching",
   },
 ];
 
 export function FeaturesSection() {
   return (
-    <section className="py-3xl px-lg bg-surface-container-lowest relative overflow-hidden">
-      {/* Decorative line */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-24 bg-gradient-to-b from-transparent via-primary/30 to-transparent" />
-
-      <div className="w-full max-w-7xl mx-auto">
+    <section className="py-3xl px-lg bg-background relative overflow-hidden">
+      <div className="w-full max-w-[1280px] mx-auto space-y-32">
+        
         <FadeIn className="text-center mb-2xl">
-          <h2 className="font-sans text-3xl md:text-4xl font-bold text-on-surface">
-            Why Runnerx?
+          <h2 className="font-sans text-3xl md:text-5xl font-black text-on-surface tracking-tight">
+            Built for the campus grind.
           </h2>
-          <p className="font-mono text-sm text-on-surface-variant mt-sm">
-            Built specifically for campus life
+          <p className="font-mono text-lg text-on-surface-variant mt-sm">
+            Everything you need to survive the semester.
           </p>
         </FadeIn>
 
-        <StaggerChildren
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg"
-          staggerDelay={0.08}
-        >
-          {features.map((f, i) => (
-            <StaggerItem key={f.title}>
-              <motion.div
-                className="group bg-surface border border-outline-variant rounded-xl p-xl space-y-sm hover:border-primary/50 transition-all duration-300 relative overflow-hidden"
-                whileHover={{
-                  y: -4,
-                  boxShadow: "0 20px 40px -12px rgba(26, 122, 109, 0.1)",
-                }}
-                transition={{ duration: 0.3 }}
+        <div className="space-y-32">
+          {features.map((feature, i) => (
+            <div key={feature.id} className="grid grid-cols-1 lg:grid-cols-2 gap-xl lg:gap-32 items-center">
+              
+              {/* Image Column (UI Mockup Container) */}
+              <motion.div 
+                className={`relative w-full aspect-square md:aspect-video lg:aspect-square bg-surface-container-high rounded-[3rem] overflow-hidden shadow-2xl flex items-end justify-center pt-16 px-8 ${feature.flipped ? "lg:order-last" : ""}`}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
               >
-                {/* Hover shine effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-full group-hover:translate-x-full" style={{ transitionDuration: "800ms" }} />
+                {/* Subtle background grid pattern */}
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(26,122,109,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(26,122,109,0.1)_1px,transparent_1px)] bg-[size:24px_24px]" />
+                
+                {/* Pseudo-Device Frame for the UI Screenshot */}
+                <div className="relative w-full max-w-[300px] aspect-[9/19] bg-background rounded-t-[2.5rem] overflow-hidden shadow-2xl shadow-black/40 z-10 border-[8px] border-b-0 border-surface-container-lowest translate-y-[2px]">
+                  <img 
+                    src={feature.image} 
+                    alt={feature.title}
+                    className="w-full h-full object-cover object-top"
+                  />
+                </div>
+                
+                {/* Optional overlay gradient for premium feel */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-20 pointer-events-none" />
+              </motion.div>
 
-                <motion.span
-                  className="material-symbols-outlined text-2xl text-primary inline-block"
-                  whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  {f.icon}
-                </motion.span>
-                <h3 className="font-sans text-lg font-semibold text-on-surface">
-                  {f.title}
+              {/* Text Column */}
+              <motion.div 
+                className="space-y-8"
+                initial={{ opacity: 0, x: feature.flipped ? -40 : 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 100 }}
+              >
+                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                  <span className="material-symbols-outlined text-4xl">
+                    {feature.icon}
+                  </span>
+                </div>
+                
+                <h3 className="font-sans text-4xl lg:text-5xl font-black text-on-surface tracking-tight leading-tight">
+                  {feature.title}
                 </h3>
-                <p className="font-mono text-sm text-on-surface-variant">
-                  {f.desc}
+                
+                <p className="font-sans text-xl text-on-surface-variant leading-relaxed">
+                  {feature.desc}
                 </p>
               </motion.div>
-            </StaggerItem>
+
+            </div>
           ))}
-        </StaggerChildren>
+        </div>
+
       </div>
     </section>
   );

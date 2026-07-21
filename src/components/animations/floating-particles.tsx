@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface FloatingParticlesProps {
@@ -10,8 +10,17 @@ interface FloatingParticlesProps {
 }
 
 export function FloatingParticles({ count = 20, className }: FloatingParticlesProps) {
-  const particles = useMemo(
-    () =>
+  const [particles, setParticles] = useState<Array<{
+    id: number;
+    x: number;
+    y: number;
+    size: number;
+    duration: number;
+    delay: number;
+  }>>([]);
+
+  useEffect(() => {
+    setParticles(
       Array.from({ length: count }, (_, i) => ({
         id: i,
         x: Math.random() * 100,
@@ -19,9 +28,9 @@ export function FloatingParticles({ count = 20, className }: FloatingParticlesPr
         size: Math.random() * 4 + 2,
         duration: Math.random() * 20 + 15,
         delay: Math.random() * 5,
-      })),
-    [count]
-  );
+      }))
+    );
+  }, [count]);
 
   return (
     <div className={cn("absolute inset-0 overflow-hidden pointer-events-none", className)}>
