@@ -29,7 +29,7 @@ export function FaqSection() {
   return (
     <section className="py-24 md:py-32 px-6 bg-surface">
       <div className="w-full max-w-[768px] mx-auto">
-        <FadeIn className="text-center mb-16" style={{ display: "block", width: "100%" }}>
+        <FadeIn className="text-center mb-16 block">
           <h2 className="font-sans text-4xl md:text-5xl lg:text-6xl font-black text-on-surface tracking-tight" style={{ display: "block", width: "100%" }}>
             Got <span className="text-primary">questions?</span>
           </h2>
