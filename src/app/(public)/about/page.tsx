@@ -10,18 +10,18 @@ export const metadata: Metadata = {
 const team = [
   {
     name: "Joseph Osei Aboagye",
-    role: "Co-Founder",
+    role: "CTO & Co-Founder",
     image: "/team/Joseph Osei Aboagye.jpg",
   },
   {
     name: "Nana Essilfie Mbeah",
-    role: "Co-Founder",
+    role: "CTO & Co-Founder",
     image: "/team/Prince Essilfie Mbeah.jpg",
   },
   {
     name: "Vincent Otchere",
-    role: "Co-Founder",
-    image: "/team/Vincent Otchere.jpg",
+    role: "Founder",
+    image: "/team/Vincent New.jpg",
   },
 ];
 

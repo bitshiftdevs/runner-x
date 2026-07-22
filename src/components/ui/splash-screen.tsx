@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
 
 const facts = [
-  "Built in Kumasi by KNUST alumni.",
+  "A product of Bitshift.",
   "Earn money between classes by completing quests.",
   "Instantly cash out your earnings via MoMo.",
   "Did you know? Airbnb funded their startup by selling custom cereal boxes.",
@@ -136,7 +136,7 @@ export function SplashScreen() {
           </div>
 
           {/* Network Status Indicators */}
-          <div className="absolute bottom-12 flex flex-col items-center gap-2">
+          <div className="absolute bottom-24 flex flex-col items-center gap-2">
             {isOffline ? (
               <div className="flex items-center gap-2 text-red-400 bg-red-400/10 px-4 py-2 rounded-full border border-red-400/20">
                 <span className="material-symbols-outlined text-sm">wifi_off</span>
@@ -153,6 +153,12 @@ export function SplashScreen() {
                 <span className="font-mono text-[10px] uppercase tracking-widest">Connecting to Campus</span>
               </div>
             )}
+          </div>
+
+          {/* Made by Bitshift Footer */}
+          <div className="absolute bottom-6 flex items-center gap-2 opacity-50">
+            <span className="font-mono text-[10px] text-white uppercase tracking-widest">Made by</span>
+            <Image src="/bitshift_logo.png" alt="Bitshift" width={56} height={14} className="object-contain" />
           </div>
 
         </motion.div>
