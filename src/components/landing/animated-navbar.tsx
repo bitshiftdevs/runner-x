@@ -23,10 +23,10 @@ export function AnimatedNavbar() {
   return (
     <motion.nav
       className={cn(
-        "sticky top-0 z-50 border-b transition-all duration-300",
-        scrolled
-          ? "bg-background/90 backdrop-blur-xl border-border shadow-sm"
-          : "bg-transparent border-transparent"
+        "text-on-surface sticky top-0 z-50 border-b transition-colors duration-500",
+        !scrolled
+          ? "dark bg-background border-transparent"
+          : "bg-background/90 backdrop-blur-xl border-border shadow-sm"
       )}
       initial={{ y: -80 }}
       animate={{ y: 0 }}
