@@ -38,7 +38,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Don't melt walking across campus. Runnerx connects you with trusted school mates to handle your errands in minutes, so you can focus on what matters.
+            Don't melt walking across campus. Runnerx connects you with trusted school mates to handle your errands in minutes, so you can focus on what matters to you at that moment.
           </motion.p>
 
           <motion.div

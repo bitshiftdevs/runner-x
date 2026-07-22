@@ -5,12 +5,12 @@ import { FadeIn } from "@/components/animations/fade-in";
 
 const features = [
   {
-    id: "skip-the-sun",
-    title: "Skip the Sun",
-    desc: "Don't sweat the 20-minute trek across campus. Let a runner handle the heat while you chill in the library.",
+    id: "students-helping-students",
+    title: "Students Helping Students",
+    desc: "Connect with peers on campus. Get your errands sorted fast, while putting money directly into the pockets of fellow students.",
     image: "/feature-sun.jpg",
     flipped: false,
-    icon: "wb_sunny",
+    icon: "handshake",
   },
   {
     id: "protect-your-time",
