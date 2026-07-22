@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
+  { href: "https://blog.bitshiftdevs.com/tags/runnerx", label: "Blog", external: true },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -66,6 +67,7 @@ export function AnimatedNavbar() {
             >
               <Link
                 href={link.href}
+                {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 className="relative text-sm text-on-surface-variant hover:text-primary transition-colors hidden sm:block group"
               >
                 {link.label}
@@ -79,6 +81,7 @@ export function AnimatedNavbar() {
             <Link
               key={`mobile-${link.href}`}
               href={link.href}
+              {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="text-xs text-on-surface-variant hover:text-primary transition-colors sm:hidden"
             >
               {link.label}
