@@ -72,7 +72,12 @@ export function AnimatedFooter() {
                 The hyper-local dispatch marketplace built for students, by alumni. A product of Bitshift.
               </p>
 
-              {/* Removed "Live on Campus" */}
+              <div className="flex items-center gap-2 mt-6">
+                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                <p className="font-mono text-xs text-white/50 uppercase tracking-widest">
+                  Live on Campus
+                </p>
+              </div>
             </FadeIn>
           </div>
 

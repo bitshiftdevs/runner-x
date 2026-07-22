@@ -13,7 +13,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="dark relative min-h-[90vh] flex items-center pt-24 pb-12 px-lg overflow-hidden bg-background text-on-surface">
+    <section className="relative min-h-[90vh] flex items-center pt-24 pb-12 px-lg overflow-hidden bg-background">
       {/* Subtle Background Accent */}
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-bl from-primary/5 to-transparent pointer-events-none" />
 
