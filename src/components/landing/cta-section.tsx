@@ -6,7 +6,7 @@ import { FadeIn } from "@/components/animations/fade-in";
 
 export function CtaSection() {
   return (
-    <section id="cta" className="py-32 md:py-48 px-6 bg-[#0a0f0e] text-white relative overflow-hidden flex flex-col items-center justify-center min-h-[80vh]">
+    <section id="cta" className="py-32 md:py-48 px-6 bg-surface-container-low text-on-surface relative overflow-hidden flex flex-col items-center justify-center min-h-[80vh]">
       
       {/* Background Graphic Elements */}
       <motion.div
@@ -19,14 +19,14 @@ export function CtaSection() {
 
       <div className="w-full max-w-[1280px] mx-auto text-center relative z-10" style={{ display: "block", width: "100%" }}>
         <FadeIn className="w-full block">
-          <h2 className="font-sans text-6xl md:text-8xl lg:text-[120px] font-black uppercase tracking-tighter leading-none text-white w-full" style={{ display: "block", width: "100%" }}>
+          <h2 className="font-sans text-6xl md:text-8xl lg:text-[120px] font-black uppercase tracking-tighter leading-none text-on-surface w-full" style={{ display: "block", width: "100%" }}>
             Stop waiting. <br/>
             <span className="text-primary italic">Start running.</span>
           </h2>
         </FadeIn>
         
         <FadeIn delay={0.2} className="w-full mt-12 mb-16 block">
-          <p className="font-sans text-xl md:text-2xl text-white/70 mx-auto leading-relaxed" style={{ maxWidth: "600px" }}>
+          <p className="font-sans text-xl md:text-2xl text-on-surface-variant mx-auto leading-relaxed" style={{ maxWidth: "600px" }}>
             The hyper-local campus dispatch network is live. Download the app and join the hustle today.
           </p>
         </FadeIn>
