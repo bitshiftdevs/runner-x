@@ -26,7 +26,7 @@ export function AnimatedNavbar() {
       className={cn(
         "text-on-surface sticky top-0 z-50 border-b transition-colors duration-500",
         !scrolled
-          ? "dark bg-background border-transparent"
+          ? "bg-transparent border-transparent"
           : "bg-background/90 backdrop-blur-xl border-border shadow-sm"
       )}
       initial={{ y: -80 }}

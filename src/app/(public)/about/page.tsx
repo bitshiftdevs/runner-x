@@ -30,7 +30,7 @@ export default function AboutPage() {
     <div className="w-full relative bg-surface-container-lowest">
       
       {/* Hero Section */}
-      <section className="pt-48 pb-24 px-6 relative overflow-hidden bg-[#0a0f0e] text-white">
+      <section className="pt-48 pb-24 px-6 relative overflow-hidden bg-surface-container-lowest text-on-surface">
         <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
           <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-primary rounded-full blur-[150px]" />
         </div>
@@ -41,9 +41,9 @@ export default function AboutPage() {
             <span className="text-primary italic">campus economy</span> <br />
             we wished we had.
           </h1>
-          <p className="font-sans text-xl md:text-2xl text-white/70 max-w-[768px] mx-auto leading-relaxed">
+          <p className="font-sans text-xl md:text-2xl text-on-surface-variant max-w-[768px] mx-auto leading-relaxed">
             Runnerx is a hyper-local dispatch marketplace designed exclusively for university campuses across Ghana. 
-            A proud product of <strong className="text-white font-bold">Bitshift</strong>.
+            A proud product of <strong className="text-on-surface font-black">Bitshift</strong>.
           </p>
         </div>
       </section>
