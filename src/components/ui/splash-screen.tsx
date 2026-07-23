@@ -80,7 +80,7 @@ export function SplashScreen() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0a0f0e]/90 backdrop-blur-2xl"
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background/90 backdrop-blur-2xl"
         >
           {/* Animation Container */}
           <div className="relative w-64 h-32 flex items-center justify-center mb-12">
@@ -128,7 +128,7 @@ export function SplashScreen() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4 }}
-                className="font-mono text-sm text-white/70"
+                className="font-mono text-sm text-on-surface-variant"
               >
                 {facts[factIndex]}
               </motion.p>
@@ -148,7 +148,7 @@ export function SplashScreen() {
                 <span className="font-mono text-xs uppercase tracking-widest font-bold">Slow Connection</span>
               </div>
             ) : (
-              <div className="flex items-center gap-2 text-white/30">
+              <div className="flex items-center gap-2 text-on-surface-variant/50">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                 <span className="font-mono text-[10px] uppercase tracking-widest">Connecting to Campus</span>
               </div>
@@ -157,7 +157,7 @@ export function SplashScreen() {
 
           {/* Made by Bitshift Footer */}
           <div className="absolute bottom-6 flex items-center gap-2 opacity-50">
-            <span className="font-mono text-[10px] text-white uppercase tracking-widest">Made by</span>
+            <span className="font-mono text-[10px] text-on-surface uppercase tracking-widest">Made by</span>
             <Image src="/bitshift_logo.png" alt="Bitshift" width={56} height={14} className="object-contain" />
           </div>
 
