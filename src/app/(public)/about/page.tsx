@@ -19,7 +19,7 @@ const team = [
     image: "/team/Prince Essilfie Mbeah.jpg",
   },
   {
-    name: "Vincent Otchere",
+    name: "Vincent Okyere",
     role: "Founder",
     image: "/team/Vincent New.jpg",
   },

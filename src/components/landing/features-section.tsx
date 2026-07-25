@@ -37,10 +37,10 @@ export function FeaturesSection() {
         
         <FadeIn className="text-center mb-2xl">
           <h2 className="font-sans text-3xl md:text-5xl font-black text-on-surface tracking-tight">
-            Built for the campus grind.
+            Built for campus convenience
           </h2>
           <p className="font-mono text-lg text-on-surface-variant mt-sm">
-            Everything you need to survive the semester.
+            Get errands & deliveries done without leaving your spot.
           </p>
         </FadeIn>
 

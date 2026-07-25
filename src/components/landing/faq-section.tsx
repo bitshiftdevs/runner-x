@@ -6,20 +6,24 @@ import { FadeIn } from "@/components/animations/fade-in";
 
 const faqs = [
   {
-    question: "How do I become a Runner?",
-    answer: "Download the app, sign up with your student ID, and complete a quick verification. Once approved, you can start accepting quests immediately."
+    question: "How fast does an errand get completed?",
+    answer: "Usually within minutes. Because runners are already on campus nearby, requests are picked up and delivered faster."
   },
   {
-    question: "How do I get paid?",
-    answer: "All payments are processed securely through Mobile Money (MoMo). Earnings are instantly credited to your wallet upon quest completion and can be withdrawn anytime."
+    question: "How does payment work?",
+    answer: "All through the app via Mobile Money."
   },
   {
-    question: "What kind of quests are there?",
-    answer: "Quests range from delivering food from the Bush Canteen, printing documents at the library, to picking up groceries off-campus. You choose what you want to do."
+    question: "What if something goes wrong or my order is cancelled?",
+    answer: "You're covered. If a runner cancels, your request goes straight back to the board for another student to take. If there's an issue with your order, report it in the app for a quick fix or refund."
   },
   {
-    question: "Is Runnerx only for students?",
-    answer: "Yes! Runnerx is a hyper-local marketplace exclusively for university students. This keeps our community safe, reliable, and tight-knit."
+    question: "Is RunnerX safe and trustworthy?",
+    answer: "Yes. Every runner is a student verified with their official school ID. You can track your errand in real-time and check ratings before they start."
+  },
+  {
+    question: "What items can I request?",
+    answer: "Anything light to medium. Meals, campus paperwork, groceries, and small packages. Heavy loads (like gas cylinders or large furniture) are not allowed."
   }
 ];
 

@@ -26,9 +26,9 @@ export function HeroSection() {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <h1 className="font-sans text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-black tracking-tight text-on-surface leading-[1.05]">
-              Beat the sun.
+              Can't at the moment?
               <br />
-              <span className="text-on-surface-variant">Save your legs.</span>
+              <span className="text-on-surface-variant">We've got you.</span>
             </h1>
           </motion.div>
 
@@ -38,7 +38,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Don't melt walking across campus. Runnerx connects you with trusted school mates to handle your errands in minutes, so you can focus on what matters to you at that moment.
+            Runnerx connects you with trusted school mates to handle your errands in minutes, so you can focus on what matters to you at that moment.
           </motion.p>
 
           <motion.div
