@@ -18,7 +18,7 @@ const faqs = [
     answer: "You're covered. If a runner cancels, your request goes straight back to the board for another student to take. If there's an issue with your order, report it in the app for a quick fix or refund."
   },
   {
-    question: "Is RunnerX safe and trustworthy?",
+    question: "Is Runnerx safe and trustworthy?",
     answer: "Yes. Every runner is a student verified with their official school ID. You can track your errand in real-time and check ratings before they start."
   },
   {
