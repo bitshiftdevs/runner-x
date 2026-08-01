@@ -1,14 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase-browser";
 
 interface WaitlistModalProps {
   open: boolean;
   onClose: () => void;
+  /** Waitlist bucket. Defaults to "ios" for the existing marketing CTA. */
+  platform?: "ios" | "android" | "web";
 }
 
-export function WaitlistModal({ open, onClose }: WaitlistModalProps) {
+export function WaitlistModal({
+  open,
+  onClose,
+  platform = "ios",
+}: WaitlistModalProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
@@ -22,22 +27,30 @@ export function WaitlistModal({ open, onClose }: WaitlistModalProps) {
     setStatus("loading");
     setErrorMsg("");
 
-    const { error } = await supabase.from("waitlist_leads").insert({
-      email: email.trim().toLowerCase(),
-      platform: "ios",
-    });
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim().toLowerCase(), platform }),
+      });
+      const body = (await res.json().catch(() => ({}))) as {
+        joined?: boolean;
+        error?: string;
+      };
 
-    if (error) {
-      if (error.code === "23505") {
-        setStatus("success");
-        setEmail("");
-      } else {
+      if (!res.ok) {
         setStatus("error");
-        setErrorMsg("Something went wrong. Please try again.");
+        setErrorMsg(body.error ?? "Something went wrong. Please try again.");
+        return;
       }
-    } else {
+
+      // `joined: false` means the (email, platform) pair was already on the
+      // list; treat that as success from the user's perspective.
       setStatus("success");
       setEmail("");
+    } catch {
+      setStatus("error");
+      setErrorMsg("Network error. Please check your connection.");
     }
   }
 
