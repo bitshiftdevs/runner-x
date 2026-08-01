@@ -1,25 +1,33 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db";
+
+import { gqlRequest } from "@/lib/gql-client";
+import type { BackendError } from "@/lib/gql-errors";
+import {
+  type BackendProfileRaw,
+  toClientProfile,
+} from "@/lib/graphql/adapters";
+import { ALL_USERS } from "@/lib/graphql/operations";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const role = searchParams.get("role");
-  const status = searchParams.get("status");
-  const search = searchParams.get("search");
-  const limit = Number(searchParams.get("limit") || "50");
-  const offset = Number(searchParams.get("offset") || "0");
+  const search = searchParams.get("search") ?? undefined;
+  const limit = Number(searchParams.get("limit") ?? "50");
+  const offset = Number(searchParams.get("offset") ?? "0");
+  const size = limit;
+  const page = Math.floor(offset / limit);
 
-  let query = db.from("profiles").select("*", { count: "exact" });
-
-  if (role) query = query.eq("role", role);
-  if (status) query = query.eq("student_id_status", status);
-  if (search) query = query.or(`full_name.ilike.%${search}%,phone_number.ilike.%${search}%`);
-
-  const { data, count, error } = await query
-    .order("created_at", { ascending: false })
-    .range(offset, offset + limit - 1);
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-
-  return NextResponse.json({ users: data, total: count ?? 0 });
+  try {
+    const data = await gqlRequest<{ allUsers: BackendProfileRaw[] }>(
+      ALL_USERS,
+      { search: search ?? null, page, size },
+    );
+    const users = data.allUsers.map(toClientProfile);
+    return NextResponse.json({ users, total: users.length });
+  } catch (err) {
+    const be = err as BackendError;
+    return NextResponse.json(
+      { users: [], total: 0, error: be.message },
+      { status: be.kind === "permission_denied" ? 403 : 500 },
+    );
+  }
 }

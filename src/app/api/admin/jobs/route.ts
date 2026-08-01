@@ -1,23 +1,30 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db";
+
+import { gqlRequest } from "@/lib/gql-client";
+import type { BackendError } from "@/lib/gql-errors";
+import { type BackendErrand, toClientJob } from "@/lib/graphql/adapters";
+import { ALL_ERRANDS } from "@/lib/graphql/operations";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const status = searchParams.get("status");
-  const category = searchParams.get("category");
   const limit = Number(searchParams.get("limit") || "50");
   const offset = Number(searchParams.get("offset") || "0");
+  const size = limit;
+  const page = Math.floor(offset / limit);
 
-  let query = db.from("jobs").select("*", { count: "exact" });
-
-  if (status) query = query.eq("status", status);
-  if (category) query = query.eq("category", category);
-
-  const { data, count, error } = await query
-    .order("created_at", { ascending: false })
-    .range(offset, offset + limit - 1);
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-
-  return NextResponse.json({ jobs: data, total: count ?? 0 });
+  try {
+    const data = await gqlRequest<{ allErrands: BackendErrand[] }>(
+      ALL_ERRANDS,
+      { status: status ?? null, page, size },
+    );
+    const jobs = data.allErrands.map(toClientJob);
+    return NextResponse.json({ jobs, total: jobs.length });
+  } catch (err) {
+    const be = err as BackendError;
+    return NextResponse.json(
+      { jobs: [], total: 0, error: be.message },
+      { status: be.kind === "permission_denied" ? 403 : 500 },
+    );
+  }
 }

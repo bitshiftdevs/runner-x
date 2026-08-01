@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 
-// For MVP, notifications are generated from recent activity
-// In production, these would be stored in their own table
+import { getServerUser } from "@/lib/user";
+
+/**
+ * Placeholder — the backend does not yet persist per-user notifications;
+ * the mobile client relies on FCM push. When a `Notification` table lands,
+ * swap the empty array for a `myNotifications` GraphQL query.
+ */
 export async function GET() {
-  const cookieStore = await cookies();
-  const userId = cookieStore.get("session")?.value;
-  if (!userId) return NextResponse.json({ notifications: [] }, { status: 401 });
-
-  // Return empty for now — notifications will come from job events
+  const user = await getServerUser();
+  if (!user) return NextResponse.json({ notifications: [] }, { status: 401 });
   return NextResponse.json({ notifications: [] });
 }

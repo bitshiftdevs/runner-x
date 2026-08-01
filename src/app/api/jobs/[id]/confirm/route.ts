@@ -1,31 +1,35 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { db } from "@/db";
 
+import { gqlRequest } from "@/lib/gql-client";
+import type { BackendError } from "@/lib/gql-errors";
+import { type BackendErrand, toClientJob } from "@/lib/graphql/adapters";
+import { UPDATE_ERRAND_STATUS } from "@/lib/graphql/operations";
+
+/**
+ * Requester confirms delivery — the backend enforces the delivered→confirmed
+ * transition (and triggers the wallet credit for the runner).
+ */
 export async function POST(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const cookieStore = await cookies();
-  const userId = cookieStore.get("session")?.value;
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
   const { id } = await params;
-  const { data: job } = await db.from("jobs").select("*").eq("id", id).single();
-
-  if (!job) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  if (job.requester_id !== userId) return NextResponse.json({ error: "Only requester can confirm" }, { status: 403 });
-  if (job.status !== "delivered") return NextResponse.json({ error: "Job not at delivered stage" }, { status: 400 });
-
-  const { data: updated } = await db
-    .from("jobs")
-    .update({ status: "confirmed" })
-    .eq("id", id)
-    .select()
-    .single();
-
-  await db.from("job_stages").insert({ job_id: id, stage: "confirmed", actor_id: userId });
-  await db.from("messages").insert({ job_id: id, sender_id: userId, content: "Delivery confirmed! Quest completed. 🎉" });
-
-  return NextResponse.json({ job: updated });
+  try {
+    const data = await gqlRequest<{ updateErrandStatus: BackendErrand }>(
+      UPDATE_ERRAND_STATUS,
+      { errandId: id, status: "confirmed" },
+    );
+    return NextResponse.json({ job: toClientJob(data.updateErrandStatus) });
+  } catch (err) {
+    const be = err as BackendError;
+    const status =
+      be.kind === "unauthenticated"
+        ? 401
+        : be.kind === "permission_denied"
+          ? 403
+          : be.kind === "not_found"
+            ? 404
+            : 400;
+    return NextResponse.json({ error: be.message }, { status });
+  }
 }

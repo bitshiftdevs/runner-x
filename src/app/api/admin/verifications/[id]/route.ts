@@ -1,18 +1,30 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db";
+
+import { gqlRequest } from "@/lib/gql-client";
+import type { BackendError } from "@/lib/gql-errors";
+import { VERIFY_STUDENT_ID } from "@/lib/graphql/operations";
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const { action } = (await request.json()) as { action: "approve" | "reject" };
+  const { action } = (await request.json()) as {
+    action: "approve" | "reject";
+  };
+  const status = action === "approve" ? "approved" : "rejected";
 
-  if (action === "approve") {
-    await db.from("profiles").update({ student_id_status: "approved" }).eq("id", id);
-  } else if (action === "reject") {
-    await db.from("profiles").update({ student_id_status: "rejected" }).eq("id", id);
+  try {
+    await gqlRequest<{ verifyStudentId: { id: string } }>(VERIFY_STUDENT_ID, {
+      userId: id,
+      status,
+    });
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    const be = err as BackendError;
+    return NextResponse.json(
+      { error: be.message },
+      { status: be.kind === "permission_denied" ? 403 : 500 },
+    );
   }
-
-  return NextResponse.json({ success: true });
 }

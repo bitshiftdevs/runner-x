@@ -1,41 +1,61 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { db } from "@/db";
 
-async function getUserId() {
-  const cookieStore = await cookies();
-  return cookieStore.get("session")?.value ?? null;
-}
+import { gqlRequest } from "@/lib/gql-client";
+import type { BackendError } from "@/lib/gql-errors";
+import { type BackendMessage, toClientMessage } from "@/lib/graphql/adapters";
+import { CHAT_MESSAGES, SEND_MESSAGE } from "@/lib/graphql/operations";
 
 export async function GET(request: Request) {
-  const userId = await getUserId();
-  if (!userId) return NextResponse.json({ messages: [] }, { status: 401 });
-
   const url = new URL(request.url);
   const jobId = url.searchParams.get("jobId");
   if (!jobId) return NextResponse.json({ messages: [] });
 
-  const { data: messages } = await db
-    .from("messages")
-    .select("*")
-    .eq("job_id", jobId)
-    .order("created_at", { ascending: true });
-
-  return NextResponse.json({ messages: messages ?? [] });
+  try {
+    const data = await gqlRequest<{ chatMessages: BackendMessage[] }>(
+      CHAT_MESSAGES,
+      { errandId: jobId },
+    );
+    return NextResponse.json({
+      messages: data.chatMessages.map(toClientMessage),
+    });
+  } catch (err) {
+    const be = err as BackendError;
+    return NextResponse.json(
+      { messages: [], error: be.message },
+      { status: be.kind === "unauthenticated" ? 401 : 500 },
+    );
+  }
 }
 
 export async function POST(request: Request) {
-  const userId = await getUserId();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const body = (await request.json()) as {
+    jobId?: string;
+    content?: string;
+    imageUrl?: string;
+  };
+  if (!body.jobId) {
+    return NextResponse.json({ error: "Missing jobId" }, { status: 400 });
+  }
 
-  const { jobId, content, imageUrl } = await request.json();
-  if (!jobId || !content) return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-
-  const { data: msg } = await db
-    .from("messages")
-    .insert({ job_id: jobId, sender_id: userId, content, image_url: imageUrl ?? null })
-    .select()
-    .single();
-
-  return NextResponse.json({ message: msg });
+  try {
+    const data = await gqlRequest<{ sendMessage: BackendMessage }>(
+      SEND_MESSAGE,
+      {
+        input: {
+          errandId: body.jobId,
+          content: body.content ?? null,
+          imageUrl: body.imageUrl ?? null,
+          audioUrl: null,
+          messageType: body.imageUrl ? "image" : "text",
+        },
+      },
+    );
+    return NextResponse.json({ message: toClientMessage(data.sendMessage) });
+  } catch (err) {
+    const be = err as BackendError;
+    return NextResponse.json(
+      { error: be.message },
+      { status: be.kind === "unauthenticated" ? 401 : 400 },
+    );
+  }
 }
