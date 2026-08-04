@@ -60,8 +60,20 @@ const ERRAND_FIELDS = `
   runnerLat runnerLng
 `;
 
+const ERRAND_FIELDS_WITH_PROFILES = `
+  id requesterId runnerId title category description
+  pickupLat pickupLng deliveryLat deliveryLng
+  pickupAddress deliveryAddress urgency
+  baseFee distanceFee urgencyFee categoryFee totalFee
+  status createdAt expiresAt confirmedAt
+  rejectedRunnerIds runnerAcceptedAt trackingLink
+  runnerLat runnerLng
+  requester { id fullName avatarUrl rating }
+  runner { id fullName avatarUrl rating }
+`;
+
 export const ERRAND_QUERY = gql`
-  query Errand($id: ID!) { errand(id: $id) { ${ERRAND_FIELDS} } }
+  query Errand($id: ID!) { errand(id: $id) { ${ERRAND_FIELDS_WITH_PROFILES} } }
 `;
 export const AVAILABLE_ERRANDS = gql`
   query AvailableErrands { availableErrands { ${ERRAND_FIELDS} } }
@@ -79,12 +91,12 @@ export const CREATE_ERRAND = gql`
 `;
 export const ACCEPT_ERRAND = gql`
   mutation AcceptErrand($errandId: ID!) {
-    acceptErrand(errandId: $errandId) { ${ERRAND_FIELDS} }
+    acceptErrand(errandId: $errandId) { ${ERRAND_FIELDS_WITH_PROFILES} }
   }
 `;
 export const UPDATE_ERRAND_STATUS = gql`
   mutation UpdateErrandStatus($errandId: ID!, $status: ErrandStatus!) {
-    updateErrandStatus(errandId: $errandId, status: $status) { ${ERRAND_FIELDS} }
+    updateErrandStatus(errandId: $errandId, status: $status) { ${ERRAND_FIELDS_WITH_PROFILES} }
   }
 `;
 export const DELETE_ERRAND = gql`

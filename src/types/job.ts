@@ -24,6 +24,13 @@ export type JobStatus =
 
 export type UrgencyLevel = "normal" | "10min" | "15min" | "30min";
 
+export type JobProfile = {
+  id: string;
+  fullName: string;
+  avatarUrl: string | null;
+  rating: number;
+};
+
 export type Job = {
   id: string;
   requesterId: string;
@@ -47,6 +54,8 @@ export type Job = {
   expiresAt: string | null;
   createdAt: string;
   updatedAt: string;
+  requester: JobProfile | null;
+  runner: JobProfile | null;
 };
 
 export type JobStage = {

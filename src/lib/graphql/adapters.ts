@@ -1,6 +1,7 @@
 import type {
   Job,
   JobCategory,
+  JobProfile,
   JobStatus,
   Message,
   Payment,
@@ -57,6 +58,13 @@ export const clientUrgencyToBackend: Record<UrgencyLevel, string> = {
   "30min": "min_30",
 };
 
+export type BackendErrandProfile = {
+  id: string;
+  fullName: string;
+  avatarUrl: string | null;
+  rating: number;
+};
+
 export type BackendErrand = {
   id: string;
   requesterId: string;
@@ -85,6 +93,8 @@ export type BackendErrand = {
   trackingLink: string | null;
   runnerLat: number | null;
   runnerLng: number | null;
+  requester: BackendErrandProfile | null;
+  runner: BackendErrandProfile | null;
 };
 
 /**
@@ -133,6 +143,8 @@ export function toClientJob(e: BackendErrand): Job {
     expiresAt: e.expiresAt,
     createdAt: e.createdAt,
     updatedAt: e.createdAt,
+    requester: e.requester ? { id: e.requester.id, fullName: e.requester.fullName, avatarUrl: e.requester.avatarUrl, rating: e.requester.rating } : null,
+    runner: e.runner ? { id: e.runner.id, fullName: e.runner.fullName, avatarUrl: e.runner.avatarUrl, rating: e.runner.rating } : null,
   };
 }
 
