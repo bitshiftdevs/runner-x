@@ -136,10 +136,10 @@ export function HeroSection() {
             <div className="flex items-center gap-4 bg-surface-container-low p-4 rounded-2xl overflow-hidden">
               <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center shrink-0 overflow-hidden relative">
                  {/* Provide this image in public/runner-avatar.jpg */}
-                 <img src="/runner-avatar.jpg" alt="Kwame A." className="w-full h-full object-cover" />
+                 <img src="/runner-avatar.jpg" alt="Patrick Nok." className="w-full h-full object-cover" />
               </div>
               <div className="flex-1 min-w-0">
-                <h4 className="font-sans font-semibold text-on-surface truncate">Kwame A.</h4>
+                <h4 className="font-sans font-semibold text-on-surface truncate">Patrick Nok.</h4>
                 <div className="flex items-center gap-1 text-on-surface-variant">
                   <span className="material-symbols-outlined text-[14px] text-amber-500">star</span>
                   <span className="font-mono text-xs font-medium">4.9 (120)</span>
