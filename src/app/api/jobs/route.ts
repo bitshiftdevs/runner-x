@@ -9,21 +9,27 @@ import {
   toClientJob,
 } from "@/lib/graphql/adapters";
 import {
-  AVAILABLE_ERRANDS,
+  ERRANDS_CONNECTION,
   CREATE_ERRAND,
-  MY_POSTED_ERRANDS,
-  MY_RUNNER_ERRANDS,
 } from "@/lib/graphql/operations";
 import { ghsToPesewas } from "@/lib/money";
 import { calculatePricing } from "@/lib/pricing";
 import type { JobCategory, UrgencyLevel } from "@/types";
 import { getServerUser } from "@/lib/user";
 
+type ErrandEdge = { node: BackendErrand; cursor: string };
+type ErrandsResponse = {
+  errands: {
+    edges: ErrandEdge[];
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    totalCount: number | null;
+  };
+};
+
 /**
  * Job feed. `mine=true` returns the caller's requested + accepted errands
  * combined; otherwise we return the public backlog of available errands.
- * The client contract stays snake_case-free `Job[]` — adapter handles the
- * pesewas ↔ cedis and enum translation.
+ * Supports cursor-based pagination via `after` and `first` query params.
  */
 export async function GET(request: Request) {
   const user = await getServerUser();
@@ -31,20 +37,48 @@ export async function GET(request: Request) {
 
   const url = new URL(request.url);
   const mine = url.searchParams.get("mine") === "true";
+  const after = url.searchParams.get("after") ?? undefined;
+  const first = url.searchParams.get("first")
+    ? Number.parseInt(url.searchParams.get("first")!, 10)
+    : 20;
 
   try {
     if (mine) {
+      // Fetch both posted and runner errands using the unified query
       const [posted, running] = await Promise.all([
-        gqlRequest<{ myPostedErrands: BackendErrand[] }>(MY_POSTED_ERRANDS),
-        gqlRequest<{ myRunnerErrands: BackendErrand[] }>(MY_RUNNER_ERRANDS),
+        gqlRequest<ErrandsResponse>(ERRANDS_CONNECTION, {
+          filter: { role: "MY_POSTED" },
+          first,
+          after,
+        }),
+        gqlRequest<ErrandsResponse>(ERRANDS_CONNECTION, {
+          filter: { role: "MY_RUNS" },
+          first,
+          after,
+        }),
       ]);
-      const merged = [...posted.myPostedErrands, ...running.myRunnerErrands];
-      return NextResponse.json({ jobs: merged.map(toClientJob) });
+      const postedJobs = posted.errands.edges.map((e) => toClientJob(e.node));
+      const runningJobs = running.errands.edges.map((e) => toClientJob(e.node));
+      const merged = [...postedJobs, ...runningJobs];
+      return NextResponse.json({
+        jobs: merged,
+        pageInfo: {
+          hasNextPage:
+            posted.errands.pageInfo.hasNextPage ||
+            running.errands.pageInfo.hasNextPage,
+        },
+      });
     }
-    const data = await gqlRequest<{ availableErrands: BackendErrand[] }>(
-      AVAILABLE_ERRANDS,
-    );
-    return NextResponse.json({ jobs: data.availableErrands.map(toClientJob) });
+
+    const data = await gqlRequest<ErrandsResponse>(ERRANDS_CONNECTION, {
+      filter: { role: "AVAILABLE" },
+      first,
+      after,
+    });
+    return NextResponse.json({
+      jobs: data.errands.edges.map((e) => toClientJob(e.node)),
+      pageInfo: data.errands.pageInfo,
+    });
   } catch (err) {
     const be = err as BackendError;
     return NextResponse.json(

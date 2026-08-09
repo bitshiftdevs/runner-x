@@ -84,6 +84,26 @@ export const MY_POSTED_ERRANDS = gql`
 export const MY_RUNNER_ERRANDS = gql`
   query MyRunnerErrands { myRunnerErrands { ${ERRAND_FIELDS} } }
 `;
+
+// ── Unified paginated query ─────────────────────────────────────────────
+
+export const ERRANDS_CONNECTION = gql`
+  query Errands($filter: ErrandFilterInput, $first: Int, $after: String) {
+    errands(filter: $filter, first: $first, after: $after) {
+      edges {
+        node { ${ERRAND_FIELDS_WITH_PROFILES} }
+        cursor
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        endCursor
+        startCursor
+      }
+      totalCount
+    }
+  }
+`;
 export const CREATE_ERRAND = gql`
   mutation CreateErrand($input: CreateErrandInput!) {
     createErrand(input: $input) { ${ERRAND_FIELDS} }
