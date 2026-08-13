@@ -1,6 +1,6 @@
-# Runner_X Project Contributor Guide
+# Runnerx Project Contributor Guide
 
-Welcome to **Runner_X**—the premium student errand and quest application tailored for Ghanaian collegiate environments, starting with **KNUST**. 
+Welcome to **Runnerx**—the premium student errand and quest application tailored for Ghanaian collegiate environments, starting with **KNUST**. 
 
 This guide serves as the visual, architectural, and procedural source of truth. All developers, UI designers, and systems architects must read, understand, and strictly adhere to these standards when contributing to the repository.
 
@@ -25,7 +25,7 @@ Our stack is selected for extreme responsiveness, modern code structures, and st
 
 ## 📂 2. Directory Architecture (Clean Architecture)
 
-Runner_X uses a strict **Clean Architecture** structure. We separate concerns by responsibility layer, with clear boundaries between types, services, stores, and UI.
+Runnerx uses a strict **Clean Architecture** structure. We separate concerns by responsibility layer, with clear boundaries between types, services, stores, and UI.
 
 ```
 src/
@@ -121,7 +121,7 @@ bun drizzle-kit studio
 ```
 
 ### D. Linting & Formatting (Biome)
-Runner_X uses Biome as the single tool for linting and formatting. Run before every commit:
+Runnerx uses Biome as the single tool for linting and formatting. Run before every commit:
 ```bash
 # Check for issues
 bun biome check .

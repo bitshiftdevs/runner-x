@@ -1,6 +1,6 @@
 import type { JobCategory, UrgencyLevel } from "@/types";
 
-export const APP_NAME = "Runner_X";
+export const APP_NAME = "Runnerx";
 export const APP_TAGLINE = "Campus Hustle, Delivered Fast";
 export const DEFAULT_CAMPUS = "";
 export const CURRENCY = "GHS";

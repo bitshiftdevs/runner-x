@@ -1,10 +1,10 @@
-# Runner_X – Project Development Roadmap
+# Runnerx – Project Development Roadmap
 
 > **Last Updated:** June 11, 2026  
 > **Current Phase:** Phase 0 — Foundation & Architecture  
 > **Target Launch:** KNUST Campus MVP
 
-This roadmap governs the complete build progression of Runner_X — from infrastructure setup to multi-campus scale. Each phase must be completed and verified before the next begins.
+This roadmap governs the complete build progression of Runnerx — from infrastructure setup to multi-campus scale. Each phase must be completed and verified before the next begins.
 
 ---
 
@@ -22,7 +22,7 @@ This roadmap governs the complete build progression of Runner_X — from infrast
 | Tailwind CSS v4 — Obsidian Dark + Zinc Light themes | ✅ Done |
 | Design token system (CSS custom properties + Tailwind config) | ✅ Done |
 | Fonts — Outfit + JetBrains Mono via `next/font/google` | ✅ Done |
-| Runner_X branding across all files | ✅ Done |
+| Runnerx branding across all files | ✅ Done |
 | `PRD.md` — Full Product Requirements Document | ✅ Done |
 | `PROJECT_GUIDE.md` — Contributor standards guide | ✅ Done |
 | `DESIGN.md` — Visual design token reference | ✅ Done |

@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🏃 Runner_X
+# 🏃 Runnerx
 
 ### *"Campus Hustle, Delivered Fast"*
 
@@ -16,9 +16,9 @@ A student-only, hyper-local dispatch marketplace for university campuses in Ghan
 
 ---
 
-## 📖 What is Runner_X?
+## 📖 What is Runnerx?
 
-Runner_X connects **Requesters** (students needing errands) with **Runners** (students earning money) on a hyper-local campus marketplace. Think of it as the on-campus Uber for errands.
+Runnerx connects **Requesters** (students needing errands) with **Runners** (students earning money) on a hyper-local campus marketplace. Think of it as the on-campus Uber for errands.
 
 - 📦 **Requesters** post jobs — food pickups, printing, document runs, general errands.
 - 🏃 **Runners** browse the live quest board, accept jobs, and earn money between classes.
@@ -207,6 +207,6 @@ All contributors must read [`PROJECT_GUIDE.md`](./PROJECT_GUIDE.md) before writi
 
 Built with ❤️ for Ghanaian campuses.
 
-**Runner_X** — *Campus Hustle, Delivered Fast.*
+**Runnerx** — *Campus Hustle, Delivered Fast.*
 
 </div>

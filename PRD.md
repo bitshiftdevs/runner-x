@@ -1,15 +1,15 @@
-# Runner_X – Product Requirements Document (PRD)
+# Runnerx – Product Requirements Document (PRD)
 
 > **Document Version:** 2.0  
 > **Date:** June 11, 2026  
-> **Product Name:** Runner_X  
+> **Product Name:** Runnerx  
 > **Tagline:** *"Campus Hustle, Delivered Fast"*
 
 ---
 
 ## 1. Executive Summary
 
-Runner_X is a **student-only, hyper-local dispatch marketplace** for university campuses in Ghana, starting with **KNUST** (Kwame Nkrumah University of Science and Technology) in Kumasi.
+Runnerx is a **student-only, hyper-local dispatch marketplace** for university campuses in Ghana, starting with **KNUST** (Kwame Nkrumah University of Science and Technology) in Kumasi.
 
 The app connects **Requesters** (students needing errands) with **Runners** (students earning money). It operates on a **Dispatch-First model**: the platform only manages the service/delivery fee. Item costs are handled directly between parties (cash or Mobile Money) to avoid early fintech regulations.
 
@@ -262,4 +262,4 @@ Browse Jobs → Accept → Chat & Coordinate → Complete Stages with Photos →
 
 ---
 
-*This PRD is the single source of truth for Runner_X product scope, priorities, and direction. All feature development must be validated against this document before implementation.*
+*This PRD is the single source of truth for Runnerx product scope, priorities, and direction. All feature development must be validated against this document before implementation.*

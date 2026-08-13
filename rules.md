@@ -1,6 +1,6 @@
-# 📖 Runner_X Engineering Principles & Repository Rules
+# 📖 Runnerx Engineering Principles & Repository Rules
 
-These are non-negotiable rules for every contributor and AI agent. They combine the strict visual aesthetics of Runner_X with enterprise-grade Clean Architecture principles.
+These are non-negotiable rules for every contributor and AI agent. They combine the strict visual aesthetics of Runnerx with enterprise-grade Clean Architecture principles.
 
 ---
 
