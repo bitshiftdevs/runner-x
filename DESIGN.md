@@ -82,9 +82,9 @@ tokens:
       glowWarning: "0 8px 16px rgba(217, 119, 6, 0.08)"
 ---
 
-# Design System: Cyber-Guildboard (runner_x)
+# Design System: Cyber-Guildboard (runnerx)
 
-Welcome to the visual source of truth for **runner_x**. This document outlines the typography, styling, component design, and behavioral guidelines for our student quest questboard app.
+Welcome to the visual source of truth for **runnerx**. This document outlines the typography, styling, component design, and behavioral guidelines for our student quest questboard app.
 
 ---
 

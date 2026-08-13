@@ -95,8 +95,8 @@ src/
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-org/runner_x.git
-cd runner_x
+git clone https://github.com/your-org/runnerx.git
+cd runnerx
 ```
 
 ### 2. Set up environment variables
@@ -106,7 +106,7 @@ cp .env.example .env.local
 ```
 
 ```env
-DATABASE_URL=postgresql://...@neon.tech/runner_x
+DATABASE_URL=postgresql://...@neon.tech/runnerx
 MOOLRE_API_KEY=your-moolre-key
 MOOLRE_SECRET_KEY=your-moolre-secret
 NEXT_PUBLIC_GOOGLE_MAPS_KEY=your-maps-key
