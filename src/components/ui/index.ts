@@ -6,6 +6,5 @@ export { ProgressBar } from "./progress-bar";
 export { Rating } from "./rating";
 export { SearchInput } from "./search-input";
 export { SectionHeader } from "./section-header";
-export { SlideToAccept } from "./slide-to-accept";
 export { StatusChip } from "./status-chip";
 export { Toggle } from "./toggle";
