@@ -1,7 +1,10 @@
 import { CURRENCY_SYMBOL } from "@/constants";
+import { PESEWAS_PER_GHS } from "@/lib/money";
 
 export function formatCurrency(amount: number | string): string {
-  return `${CURRENCY_SYMBOL}${Number(amount).toFixed(2)}`;
+  const pesewas = Number(amount);
+  const ghs = pesewas / PESEWAS_PER_GHS;
+  return `${CURRENCY_SYMBOL}${ghs.toFixed(2)}`;
 }
 
 export function formatDistance(km: number | string): string {
