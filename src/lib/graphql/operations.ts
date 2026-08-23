@@ -9,7 +9,7 @@ import { gql } from "graphql-request";
 // ── Profile ─────────────────────────────────────────────────────────────
 
 export const PROFILE_QUERY = gql`
-  query Profile($id: ID!) {
+  query Profile($id: UUID!) {
     profile(id: $id) {
       ...ProfileFields
     }
@@ -90,7 +90,7 @@ const ERRAND_FIELDS_WITH_PROFILES = `
 `;
 
 export const ERRAND_QUERY = gql`
-  query Errand($id: ID!) { errand(id: $id) { ${ERRAND_FIELDS_WITH_PROFILES} } }
+  query Errand($id: UUID!) { errand(id: $id) { ${ERRAND_FIELDS_WITH_PROFILES} } }
 `;
 export const AVAILABLE_ERRANDS = gql`
   query AvailableErrands { availableErrands { ${ERRAND_FIELDS} } }
@@ -121,28 +121,6 @@ export const ERRANDS_CONNECTION = gql`
     }
   }
 `;
-export const CREATE_ERRAND = gql`
-  mutation CreateErrand($input: CreateErrandInput!) {
-    createErrand(input: $input) { ${ERRAND_FIELDS} }
-  }
-`;
-export const ACCEPT_ERRAND = gql`
-  mutation AcceptErrand($errandId: ID!) {
-    acceptErrand(errandId: $errandId) { ${ERRAND_FIELDS_WITH_PROFILES} }
-  }
-`;
-export const UPDATE_ERRAND_STATUS = gql`
-  mutation UpdateErrandStatus($errandId: ID!, $status: ErrandStatus!) {
-    updateErrandStatus(errandId: $errandId, status: $status) { ${ERRAND_FIELDS_WITH_PROFILES} }
-  }
-`;
-export const DELETE_ERRAND = gql`
-  mutation DeleteErrand($errandId: ID!) {
-    deleteErrand(errandId: $errandId)
-  }
-`;
-
-// ── Payment ─────────────────────────────────────────────────────────────
 
 const PAYMENT_FIELDS = `
   id errandId userId amount currency channel payer
@@ -153,12 +131,12 @@ export const MY_PAYMENTS = gql`
   query MyPayments { myPayments { ${PAYMENT_FIELDS} } }
 `;
 export const PAYMENT_BY_ERRAND = gql`
-  query PaymentByErrand($errandId: ID!) {
+  query PaymentByErrand($errandId: UUID!) {
     paymentByErrand(errandId: $errandId) { ${PAYMENT_FIELDS} }
   }
 `;
 export const INITIATE_ERRAND_PAYMENT = gql`
-  mutation InitiateErrandPayment($errandId: ID!, $channel: String!, $payer: String!) {
+  mutation InitiateErrandPayment($errandId: UUID!, $channel: String!, $payer: String!) {
     initiateErrandPayment(errandId: $errandId, channel: $channel, payer: $payer) {
       ${PAYMENT_FIELDS}
     }
@@ -210,7 +188,7 @@ export const MY_PAYMENT_METHODS = gql`
   }
 `;
 export const REQUEST_WITHDRAWAL = gql`
-  mutation RequestWithdrawal($amount: Int!, $paymentMethodId: ID!) {
+  mutation RequestWithdrawal($amount: Int!, $paymentMethodId: UUID!) {
     requestWithdrawal(amount: $amount, paymentMethodId: $paymentMethodId) {
       id
       runnerId
@@ -247,7 +225,7 @@ export const ADD_PAYMENT_METHOD = gql`
   }
 `;
 export const REMOVE_PAYMENT_METHOD = gql`
-  mutation RemovePaymentMethod($id: ID!) {
+  mutation RemovePaymentMethod($id: UUID!) {
     removePaymentMethod(id: $id)
   }
 `;
@@ -258,7 +236,7 @@ const MESSAGE_FIELDS = `
   id errandId senderId content imageUrl audioUrl messageType createdAt
 `;
 export const CHAT_MESSAGES = gql`
-  query ChatMessages($errandId: ID!) { chatMessages(errandId: $errandId) { ${MESSAGE_FIELDS} } }
+  query ChatMessages($errandId: UUID!) { chatMessages(errandId: $errandId) { ${MESSAGE_FIELDS} } }
 `;
 export const SEND_MESSAGE = gql`
   mutation SendMessage($input: SendMessageInput!) {
@@ -350,7 +328,7 @@ export const PLATFORM_STATS = gql`
   }
 `;
 export const VERIFY_STUDENT_ID = gql`
-  mutation VerifyStudentId($userId: ID!, $status: VerificationStatus!) {
+  mutation VerifyStudentId($userId: UUID!, $status: VerificationStatus!) {
     verifyStudentId(userId: $userId, status: $status) {
       id
       fullName
@@ -360,14 +338,14 @@ export const VERIFY_STUDENT_ID = gql`
   }
 `;
 export const RESOLVE_DISPUTE = gql`
-  mutation ResolveDispute($errandId: ID!, $resolution: String!, $refundRequester: Boolean!) {
+  mutation ResolveDispute($errandId: UUID!, $resolution: String!, $refundRequester: Boolean!) {
     resolveDispute(errandId: $errandId, resolution: $resolution, refundRequester: $refundRequester) {
       ${ERRAND_FIELDS}
     }
   }
 `;
 export const BAN_USER = gql`
-  mutation BanUser($userId: ID!, $reason: String!) {
+  mutation BanUser($userId: UUID!, $reason: String!) {
     banUser(userId: $userId, reason: $reason) {
       id
       fullName
@@ -376,7 +354,7 @@ export const BAN_USER = gql`
   }
 `;
 export const UNBAN_USER = gql`
-  mutation UnbanUser($userId: ID!) {
+  mutation UnbanUser($userId: UUID!) {
     unbanUser(userId: $userId) {
       id
       fullName
