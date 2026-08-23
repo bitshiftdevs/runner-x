@@ -7,16 +7,7 @@
 
 ## 1. Backend Gaps (GraphQL API)
 
-| Gap | Description | Impact |
-|---|---|---|
-| `allPayments` admin query | Web stub returns empty — no way to list all payments admin-side | 🔴 Admin dashboard incomplete |
-| `allWallets` admin query | Web stub returns empty — no way to list all wallets admin-side | 🔴 Admin dashboard incomplete |
-| `dailyJobs` in `platformStats` | Returns hardcoded `0` | 🟡 Stats incomplete |
-| `pendingVerifications` count | Returns hardcoded `0` in stats | 🟡 Stats incomplete |
-| `activeDisputes` count | Returns hardcoded `0` in stats | 🟡 Stats incomplete |
-| `totalPayments` count | Returns hardcoded `0` in stats | 🟡 Stats incomplete |
-| `totalWalletBalance` | Returns hardcoded `0` in stats | 🟡 Stats incomplete |
-| `activeWallets` count | Returns hardcoded `0` in stats | 🟡 Stats incomplete |
+> ✅ All admin queries implemented. No remaining backend gaps.
 
 ---
 
@@ -30,46 +21,23 @@ The mobile app is otherwise well-covered against the backend API. All major feat
 
 ---
 
-## 3. Web Gaps (Next.js) — Pre-Cleanup
+## 3. Web Gaps (Next.js) — Post-Cleanup
 
-> Note: The web app is being repurposed to serve only landing/product pages and the admin dashboard.
-> User-facing features below are being removed.
+> Note: The web app has been repurposed to serve only landing/product pages and the admin dashboard.
+> User-facing features have been removed.
 
-### 3a. Missing Settings Sub-Pages (linked but never created)
+### 3a. Web Admin Status
 
-| Route | Linked From | Status |
-|---|---|---|
-| `/settings/appearance` | Settings page | ❌ Missing |
-| `/settings/language` | Settings page | ❌ Missing |
-| `/settings/notifications` | Settings page | ❌ Missing |
-| `/settings/phone` | Settings page | ❌ Missing |
-| `/settings/privacy` | Settings page | ❌ Missing |
-| `/settings/help` | Settings page | ❌ Missing |
-
-### 3b. Features Present in Mobile but Missing from Web
-
-| Feature | Mobile | Web | Backend |
-|---|---|---|---|
-| Wallet / Withdrawal | ✅ | ❌ | ✅ |
-| Favorite Runners | ✅ | ❌ | ✅ |
-| Rating Flow | ✅ | ❌ | ✅ |
-| Payment Methods CRUD | ✅ | ❌ | ✅ |
-| Live Tracking Map | ✅ | ❌ | ✅ |
-| Chat (images/voice) | ✅ | ❌ Text only | ✅ |
-| Calling | ✅ | ❌ | ✅ |
-| Availability Toggle | ✅ | ❌ | ✅ |
-| Delete Account | ✅ | ❌ | ✅ |
-| Promo Code Application | ✅ | ❌ | ✅ |
-| Notification Preferences (persisted) | ✅ | ⚠️ Local only | ✅ |
-
-### 3c. Web Admin Gaps
-
-| Gap | Status |
+| Feature | Status |
 |---|---|
-| Admin – Payments Listing | ❌ API stub returns empty |
-| Admin – Wallets Listing | ❌ API stub returns empty |
-| Admin – Platform Stats | ⚠️ Many fields hardcoded to `0` |
-| Waitlist Page | ⚠️ API exists, no UI |
+| Admin – Platform Stats | ✅ All fields populated |
+| Admin – Payments Listing | ✅ Implemented |
+| Admin – Wallets Listing | ✅ Implemented |
+| Admin – Verification Queue | ✅ Implemented |
+| Admin – Dispute Resolution | ✅ Implemented |
+| Admin – User Management | ✅ Implemented |
+| Admin – Jobs Listing | ✅ Implemented |
+| Waitlist Page | ⚠️ API exists, no dedicated UI (modal on landing page) |
 
 ---
 
@@ -106,30 +74,20 @@ The mobile app is otherwise well-covered against the backend API. All major feat
 | Admin – Verification Queue | ✅ | ❌ | ✅ |
 | Admin – Dispute Resolution | ✅ | ❌ | ✅ |
 | Admin – User Management | ✅ | ❌ | ✅ |
-| Admin – Platform Stats | ✅ | ❌ | ⚠️ Partial |
-| Admin – Payments Listing | ✅ | ❌ | ❌ Stub |
-| Admin – Wallets Listing | ✅ | ❌ | ❌ Stub |
-| Waitlist | ✅ | ❌ | ⚠️ API only |
+| Admin – Platform Stats | ✅ | ❌ | ✅ |
+| Admin – Payments Listing | ✅ | ❌ | ✅ |
+| Admin – Wallets Listing | ✅ | ❌ | ✅ |
+| Waitlist | ✅ | ❌ | ✅ (modal) |
 
 ---
 
-## 5. Priority Action Items
-
-### 🔴 High Priority
-
-1. **Backend**: Implement `allPayments` and `allWallets` admin queries
-2. **Backend**: Fill in hardcoded `0`s in `platformStats` with real DB queries
-3. **Web**: Remove all user-facing pages (quests, missions, earnings, inbox, notifications, profile, settings)
-4. **Web**: Remove user-facing API routes (jobs, messages, notifications, payments, wallet, profile, storage)
-5. **Web**: Remove user-facing stores (`quest.store.ts`) and components
+## 5. Remaining Action Items
 
 ### 🟡 Medium Priority
 
-6. **Mobile**: Decide whether to add admin dashboard screens or leave admin web-only
-7. **Web**: Complete admin payments and wallets tabs once backend queries land
-8. **Web**: Wire up platformStats to return real values
+1. **Mobile**: Decide whether to add admin dashboard screens or leave admin web-only
+2. **Mobile**: Add promo code application UI (currently only a widget)
 
 ### 🟢 Low Priority
 
-9. **Web**: Add waitlist landing page
-10. **Mobile**: Add promo code application UI (currently only a widget)
+1. **Web**: Add dedicated waitlist landing page (currently a modal on landing page)

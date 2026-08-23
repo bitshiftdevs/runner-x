@@ -246,7 +246,11 @@ export const DISPUTED_ERRANDS = gql`
 `;
 export const PLATFORM_STATS = gql`
   query PlatformStats {
-    platformStats { totalUsers totalErrands activeErrands completedErrands totalRevenue }
+    platformStats {
+      totalUsers totalErrands activeErrands completedErrands totalRevenue
+      dailyJobs pendingVerifications activeDisputes totalPayments
+      totalWalletBalance activeWallets
+    }
   }
 `;
 export const VERIFY_STUDENT_ID = gql`
@@ -267,6 +271,22 @@ export const BAN_USER = gql`
   mutation BanUser($userId: ID!, $reason: String!) {
     banUser(userId: $userId, reason: $reason) {
       id fullName banned
+    }
+  }
+`;
+export const ALL_PAYMENTS = gql`
+  query AllPayments($status: PaymentStatus, $page: Int, $size: Int) {
+    allPayments(status: $status, page: $page, size: $size) {
+      id errandId userId amount currency channel payer
+      providerRef externalRef status createdAt updatedAt
+    }
+  }
+`;
+export const ALL_WALLETS = gql`
+  query AllWallets($page: Int, $size: Int) {
+    allWallets(page: $page, size: $size) {
+      id runnerId availableBalance pendingBalance
+      totalEarned totalWithdrawn currency
     }
   }
 `;

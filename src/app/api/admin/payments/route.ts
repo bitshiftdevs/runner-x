@@ -1,16 +1,30 @@
 import { NextResponse } from "next/server";
 
-/**
- * The backend has no `allPayments` admin query yet, so this endpoint
- * returns an empty page. Add a matching Kotlin fetcher/query when the
- * admin dashboard needs payment listings; until then the admin UI should
- * degrade gracefully to an empty state.
- */
-export async function GET() {
-  return NextResponse.json({
-    payments: [],
-    total: 0,
-    unsupported: true,
-    reason: "Backend does not expose an admin payments listing yet.",
-  });
+import { gqlRequest } from "@/lib/gql-client";
+import type { BackendError } from "@/lib/gql-errors";
+import { ALL_PAYMENTS } from "@/lib/graphql/operations";
+import { type BackendPayment, toClientPayment } from "@/lib/graphql/adapters";
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const status = searchParams.get("status");
+  const limit = Number(searchParams.get("limit") || "50");
+  const offset = Number(searchParams.get("offset") || "0");
+  const size = limit;
+  const page = Math.floor(offset / limit);
+
+  try {
+    const data = await gqlRequest<{ allPayments: BackendPayment[] }>(
+      ALL_PAYMENTS,
+      { status: status ?? null, page, size },
+    );
+    const payments = data.allPayments.map(toClientPayment);
+    return NextResponse.json({ payments, total: payments.length });
+  } catch (err) {
+    const be = err as BackendError;
+    return NextResponse.json(
+      { payments: [], total: 0, error: be.message },
+      { status: be.kind === "permission_denied" ? 403 : 500 },
+    );
+  }
 }

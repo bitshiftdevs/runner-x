@@ -10,14 +10,14 @@ type PlatformStats = {
   activeErrands: number;
   completedErrands: number;
   totalRevenue: number;
+  dailyJobs: number;
+  pendingVerifications: number;
+  activeDisputes: number;
+  totalPayments: number;
+  totalWalletBalance: number;
+  activeWallets: number;
 };
 
-/**
- * Backend `platformStats` returns a compact summary; the client dashboard
- * expects the fuller (legacy) shape. Extra fields default to 0 for now —
- * they'll be filled in once dedicated queries land on the backend
- * (`totalWalletBalance`, `activeWallets`, `pendingVerifications`, ...).
- */
 export async function GET() {
   try {
     const data = await gqlRequest<{ platformStats: PlatformStats }>(
@@ -25,14 +25,14 @@ export async function GET() {
     );
     const s = data.platformStats;
     return NextResponse.json({
-      pendingVerifications: 0,
-      activeDisputes: 0,
-      dailyJobs: 0,
+      pendingVerifications: s.pendingVerifications,
+      activeDisputes: s.activeDisputes,
+      dailyJobs: s.dailyJobs,
       totalUsers: s.totalUsers,
       totalRevenue: s.totalRevenue,
-      totalPayments: 0,
-      totalWalletBalance: 0,
-      activeWallets: 0,
+      totalPayments: s.totalPayments,
+      totalWalletBalance: s.totalWalletBalance,
+      activeWallets: s.activeWallets,
       totalErrands: s.totalErrands,
       activeErrands: s.activeErrands,
       completedErrands: s.completedErrands,
