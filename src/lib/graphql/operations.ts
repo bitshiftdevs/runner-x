@@ -92,6 +92,11 @@ const ERRAND_FIELDS_WITH_PROFILES = `
 export const ERRAND_QUERY = gql`
   query Errand($id: UUID!) { errand(id: $id) { ${ERRAND_FIELDS_WITH_PROFILES} } }
 `;
+export const UPDATE_ERRAND_STATUS = gql`
+  mutation UpdateErrandStatus($errandId: UUID!, $status: ErrandStatus!) {
+    updateErrandStatus(errandId: $errandId, status: $status) { ${ERRAND_FIELDS_WITH_PROFILES} }
+  }
+`;
 export const AVAILABLE_ERRANDS = gql`
   query AvailableErrands { availableErrands { ${ERRAND_FIELDS} } }
 `;
@@ -324,6 +329,32 @@ export const PLATFORM_STATS = gql`
       totalPayments
       totalWalletBalance
       activeWallets
+    }
+  }
+`;
+export const ANALYTICS_STATS = gql`
+  query AnalyticsStats {
+    analyticsStats {
+      dailyRevenue {
+        date
+        count
+        amount
+      }
+      dailyErrands {
+        date
+        count
+        amount
+      }
+      dailyUsers {
+        date
+        count
+        amount
+      }
+      categoryBreakdown {
+        category
+        count
+        revenue
+      }
     }
   }
 `;

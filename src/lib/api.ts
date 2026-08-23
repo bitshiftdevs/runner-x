@@ -47,7 +47,7 @@ type AdminDispute = {
   updatedAt: string;
 };
 
-type PaginatedQuery = { limit?: number; offset?: number };
+type PaginatedQuery = { limit?: number; offset?: number; page?: number };
 
 // ── API ────────────────────────────────────────────────────────────────
 

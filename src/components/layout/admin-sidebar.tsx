@@ -11,6 +11,7 @@ import {
   Home,
   ShieldCheck,
   AlertTriangle,
+  TrendingUp,
 } from "lucide-react";
 import {
   Sidebar,
@@ -28,6 +29,7 @@ import { Separator } from "@/components/ui/separator";
 
 const adminNav = [
   { title: "Overview", href: "/admin/overview", icon: LayoutDashboard },
+  { title: "Analytics", href: "/admin/analytics", icon: TrendingUp },
   { title: "Users", href: "/admin/users", icon: Users },
   { title: "Verifications", href: "/admin/verifications", icon: ShieldCheck },
   { title: "Disputes", href: "/admin/disputes", icon: AlertTriangle },
