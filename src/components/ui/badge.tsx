@@ -1,49 +1,52 @@
-type BadgeVariant = "primary" | "secondary" | "tertiary";
+import { mergeProps } from "@base-ui/react/merge-props"
+import { useRender } from "@base-ui/react/use-render"
+import { cva, type VariantProps } from "class-variance-authority"
 
-type BadgeProps = {
-  icon: string;
-  variant?: BadgeVariant;
-  title?: string;
-  locked?: boolean;
-  earned?: boolean;
-};
+import { cn } from "@/lib/utils"
 
-const variantStyles: Record<BadgeVariant, string> = {
-  primary: "bg-primary/10 border-primary/30 text-primary",
-  secondary: "bg-secondary/10 border-secondary/30 text-secondary",
-  tertiary: "bg-tertiary/10 border-tertiary/30 text-tertiary",
-};
+const badgeVariants = cva(
+  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        secondary:
+          "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
+        destructive:
+          "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
+        outline:
+          "border-border bg-input/30 text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground",
+        ghost:
+          "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
 
-export function Badge({
-  icon,
-  variant = "primary",
-  title,
-  locked = false,
-  earned = false,
-}: BadgeProps) {
-  return (
-    <div
-      className={`w-12 h-12 rounded-full border flex items-center justify-center relative ${
-        locked ? "opacity-40 grayscale" : ""
-      } ${variantStyles[variant]}`}
-      title={title}
-    >
-      <span className="material-symbols-outlined">{icon}</span>
-      {earned && !locked && (
-        <div
-          className={`absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center ${
-            variant === "secondary"
-              ? "bg-secondary"
-              : variant === "tertiary"
-                ? "bg-tertiary"
-                : "bg-primary"
-          }`}
-        >
-          <span className="material-symbols-outlined text-[8px] text-background">
-            check
-          </span>
-        </div>
-      )}
-    </div>
-  );
+function Badge({
+  className,
+  variant = "default",
+  render,
+  ...props
+}: useRender.ComponentProps<"span"> & VariantProps<typeof badgeVariants>) {
+  return useRender({
+    defaultTagName: "span",
+    props: mergeProps<"span">(
+      {
+        className: cn(badgeVariants({ variant }), className),
+      },
+      props
+    ),
+    render,
+    state: {
+      slot: "badge",
+      variant,
+    },
+  })
 }
+
+export { Badge, badgeVariants }
