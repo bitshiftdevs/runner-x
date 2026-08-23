@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-
-import { type BackendError, toBackendError } from "@/lib/gql-errors";
 import { gqlRequest } from "@/lib/gql-client";
+import { type BackendError, toBackendError } from "@/lib/gql-errors";
 import {
   SIGN_IN_WITH_GOOGLE,
   type SignInWithGoogleData,
@@ -9,10 +8,6 @@ import {
 import { setSessionCookies } from "@/lib/session";
 import { getServerUser } from "@/lib/user";
 
-/**
- * Reads the current session — used by the client shell to know whether
- * to render the "sign in" state or the dashboard state.
- */
 export async function GET() {
   const user = await getServerUser();
   if (!user) return NextResponse.json({ user: null }, { status: 401 });

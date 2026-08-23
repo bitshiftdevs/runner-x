@@ -1,10 +1,9 @@
 import { gql } from "graphql-request";
 
 /**
- * Backend GraphQL operations used by the Next.js server route handlers.
- * Every operation here is called from a `/api/*` route via `gqlRequest`;
- * client components should NOT import from this file — they hit the REST
- * routes and receive client-shaped JSON via the adapters.
+ * Backend GraphQL operations shared between server and client.
+ * Server-side: called via `gqlRequest` in route handlers.
+ * Client-side: called via `gqlFetch` in browser components.
  */
 
 // ── Profile ─────────────────────────────────────────────────────────────
@@ -33,8 +32,17 @@ export const PROFILE_QUERY = gql`
 export const UPDATE_PROFILE = gql`
   mutation UpdateProfile($input: UpdateProfileInput!) {
     updateProfile(input: $input) {
-      id email fullName avatarUrl isAdmin studentIdStatus
-      defaultCampus phoneNumber rating banned createdAt
+      id
+      email
+      fullName
+      avatarUrl
+      isAdmin
+      studentIdStatus
+      defaultCampus
+      phoneNumber
+      rating
+      banned
+      createdAt
     }
   }
 `;
@@ -42,8 +50,17 @@ export const UPDATE_PROFILE = gql`
 export const UPDATE_PROFILE_PHOTO = gql`
   mutation UpdateProfilePhoto($avatarUrl: String!) {
     updateProfilePhoto(avatarUrl: $avatarUrl) {
-      id email fullName avatarUrl isAdmin studentIdStatus
-      defaultCampus phoneNumber rating banned createdAt
+      id
+      email
+      fullName
+      avatarUrl
+      isAdmin
+      studentIdStatus
+      defaultCampus
+      phoneNumber
+      rating
+      banned
+      createdAt
     }
   }
 `;
@@ -54,9 +71,9 @@ const ERRAND_FIELDS = `
   id requesterId runnerId title category description
   pickupLat pickupLng deliveryLat deliveryLng
   pickupAddress deliveryAddress urgency
-  baseFee distanceFee urgencyFee categoryFee totalFee
+  totalFee
   status createdAt expiresAt confirmedAt
-  rejectedRunnerIds runnerAcceptedAt trackingLink
+  runnerAcceptedAt trackingLink
   runnerLat runnerLng
 `;
 
@@ -64,9 +81,9 @@ const ERRAND_FIELDS_WITH_PROFILES = `
   id requesterId runnerId title category description
   pickupLat pickupLng deliveryLat deliveryLng
   pickupAddress deliveryAddress urgency
-  baseFee distanceFee urgencyFee categoryFee totalFee
+  totalFee
   status createdAt expiresAt confirmedAt
-  rejectedRunnerIds runnerAcceptedAt trackingLink
+  runnerAcceptedAt trackingLink
   runnerLat runnerLng
   requester { id fullName avatarUrl rating }
   runner { id fullName avatarUrl rating }
@@ -120,7 +137,9 @@ export const UPDATE_ERRAND_STATUS = gql`
   }
 `;
 export const DELETE_ERRAND = gql`
-  mutation DeleteErrand($errandId: ID!) { deleteErrand(errandId: $errandId) }
+  mutation DeleteErrand($errandId: ID!) {
+    deleteErrand(errandId: $errandId)
+  }
 `;
 
 // ── Payment ─────────────────────────────────────────────────────────────
@@ -151,41 +170,86 @@ export const INITIATE_ERRAND_PAYMENT = gql`
 export const MY_WALLET = gql`
   query MyWallet {
     myWallet {
-      id runnerId availableBalance pendingBalance
-      totalEarned totalWithdrawn currency
+      id
+      runnerId
+      availableBalance
+      pendingBalance
+      totalEarned
+      totalWithdrawn
+      currency
     }
   }
 `;
 export const WALLET_TRANSACTIONS = gql`
   query WalletTransactions($limit: Int, $offset: Int) {
     walletTransactions(limit: $limit, offset: $offset) {
-      id runnerId errandId type amount status providerRef description createdAt
+      id
+      runnerId
+      errandId
+      type
+      amount
+      status
+      providerRef
+      description
+      createdAt
     }
   }
 `;
 export const MY_PAYMENT_METHODS = gql`
   query MyPaymentMethods {
     myPaymentMethods {
-      id runnerId provider channel phoneNumber accountName status isDefault
+      id
+      runnerId
+      provider
+      channel
+      phoneNumber
+      accountName
+      status
+      isDefault
     }
   }
 `;
 export const REQUEST_WITHDRAWAL = gql`
   mutation RequestWithdrawal($amount: Int!, $paymentMethodId: ID!) {
     requestWithdrawal(amount: $amount, paymentMethodId: $paymentMethodId) {
-      id runnerId errandId type amount status providerRef description createdAt
+      id
+      runnerId
+      errandId
+      type
+      amount
+      status
+      providerRef
+      description
+      createdAt
     }
   }
 `;
 export const ADD_PAYMENT_METHOD = gql`
-  mutation AddPaymentMethod($channel: String!, $phoneNumber: String!, $accountName: String) {
-    addPaymentMethod(channel: $channel, phoneNumber: $phoneNumber, accountName: $accountName) {
-      id runnerId provider channel phoneNumber accountName status isDefault
+  mutation AddPaymentMethod(
+    $channel: String!
+    $phoneNumber: String!
+    $accountName: String
+  ) {
+    addPaymentMethod(
+      channel: $channel
+      phoneNumber: $phoneNumber
+      accountName: $accountName
+    ) {
+      id
+      runnerId
+      provider
+      channel
+      phoneNumber
+      accountName
+      status
+      isDefault
     }
   }
 `;
 export const REMOVE_PAYMENT_METHOD = gql`
-  mutation RemovePaymentMethod($id: ID!) { removePaymentMethod(id: $id) }
+  mutation RemovePaymentMethod($id: ID!) {
+    removePaymentMethod(id: $id)
+  }
 `;
 
 // ── Chat ────────────────────────────────────────────────────────────────
@@ -224,15 +288,29 @@ export const UPDATE_NOTIFICATION_PREFERENCES = gql`
 export const ALL_USERS = gql`
   query AllUsers($search: String, $page: Int, $size: Int) {
     allUsers(search: $search, page: $page, size: $size) {
-      id email fullName avatarUrl isAdmin studentIdStatus
-      defaultCampus phoneNumber rating banned createdAt
+      id
+      email
+      fullName
+      avatarUrl
+      isAdmin
+      studentIdStatus
+      defaultCampus
+      phoneNumber
+      rating
+      banned
+      createdAt
     }
   }
 `;
 export const PENDING_VERIFICATIONS = gql`
   query PendingVerifications {
     pendingVerifications {
-      id fullName phoneNumber avatarUrl defaultCampus createdAt
+      id
+      fullName
+      phoneNumber
+      avatarUrl
+      defaultCampus
+      createdAt
     }
   }
 `;
@@ -247,16 +325,26 @@ export const DISPUTED_ERRANDS = gql`
 export const PLATFORM_STATS = gql`
   query PlatformStats {
     platformStats {
-      totalUsers totalErrands activeErrands completedErrands totalRevenue
-      dailyJobs pendingVerifications activeDisputes totalPayments
-      totalWalletBalance activeWallets
+      totalUsers
+      totalErrands
+      activeErrands
+      completedErrands
+      totalRevenue
+      pendingVerifications
+      activeDisputes
+      totalPayments
+      totalWalletBalance
+      activeWallets
     }
   }
 `;
 export const VERIFY_STUDENT_ID = gql`
   mutation VerifyStudentId($userId: ID!, $status: VerificationStatus!) {
     verifyStudentId(userId: $userId, status: $status) {
-      id fullName avatarUrl studentIdStatus
+      id
+      fullName
+      avatarUrl
+      studentIdStatus
     }
   }
 `;
@@ -270,23 +358,40 @@ export const RESOLVE_DISPUTE = gql`
 export const BAN_USER = gql`
   mutation BanUser($userId: ID!, $reason: String!) {
     banUser(userId: $userId, reason: $reason) {
-      id fullName banned
+      id
+      fullName
+      banned
     }
   }
 `;
 export const ALL_PAYMENTS = gql`
   query AllPayments($status: PaymentStatus, $page: Int, $size: Int) {
     allPayments(status: $status, page: $page, size: $size) {
-      id errandId userId amount currency channel payer
-      providerRef externalRef status createdAt updatedAt
+      id
+      errandId
+      userId
+      amount
+      currency
+      channel
+      payer
+      providerRef
+      externalRef
+      status
+      createdAt
+      updatedAt
     }
   }
 `;
 export const ALL_WALLETS = gql`
   query AllWallets($page: Int, $size: Int) {
     allWallets(page: $page, size: $size) {
-      id runnerId availableBalance pendingBalance
-      totalEarned totalWithdrawn currency
+      id
+      runnerId
+      availableBalance
+      pendingBalance
+      totalEarned
+      totalWithdrawn
+      currency
     }
   }
 `;
@@ -296,7 +401,9 @@ export const ALL_WALLETS = gql`
 export const GENERATE_UPLOAD_URL = gql`
   mutation GenerateUploadUrl($bucket: String!, $fileName: String!) {
     generateUploadUrl(bucket: $bucket, fileName: $fileName) {
-      uploadUrl publicUrl filePath
+      uploadUrl
+      publicUrl
+      filePath
     }
   }
 `;

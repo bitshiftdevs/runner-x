@@ -8,7 +8,6 @@ type Tab = "overview" | "users" | "jobs" | "wallets" | "payments";
 type AdminStats = {
   pendingVerifications: number;
   activeDisputes: number;
-  dailyJobs: number;
   totalUsers: number;
   totalRevenue: number;
   totalPayments: number;
@@ -79,7 +78,6 @@ function OverviewTab({ stats, verifications, disputes, loadingVerif, loadingDisp
     <>
       <section className="grid grid-cols-2 md:grid-cols-4 gap-md">
         <MetricCard label="Total Users" value={stats?.totalUsers ?? "—"} color="text-primary" />
-        <MetricCard label="Daily Jobs" value={stats?.dailyJobs ?? "—"} sub="Posted today" color="text-success" />
         <MetricCard label="Revenue" value={stats ? formatCurrency(stats.totalRevenue) : "—"} sub="All time" color="text-secondary" />
         <MetricCard label="Active Disputes" value={stats?.activeDisputes ?? "—"} color="text-error" />
         <MetricCard label="Pending Verifs" value={stats?.pendingVerifications ?? "—"} color="text-tertiary" />

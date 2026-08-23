@@ -1,20 +1,13 @@
-import { NextResponse } from "next/server";
 import { GraphQLClient } from "graphql-request";
-
-import { REFRESH_TOKEN, type RefreshTokenData } from "@/lib/graphql/auth";
+import { NextResponse } from "next/server";
 import { toBackendError } from "@/lib/gql-errors";
+import { REFRESH_TOKEN, type RefreshTokenData } from "@/lib/graphql/auth";
 import {
   clearSessionCookies,
   getRefreshToken,
   setSessionCookies,
 } from "@/lib/session";
 
-/**
- * Rotates the access + refresh cookies. Called by client code when it wants
- * to proactively refresh (e.g. a long-lived tab that just came back into
- * focus) — background refresh on 401 is already handled inside
- * `gqlRequest`. Uses its own bare GraphQLClient to avoid recursion.
- */
 export async function POST() {
   const refresh = await getRefreshToken();
   if (!refresh) {

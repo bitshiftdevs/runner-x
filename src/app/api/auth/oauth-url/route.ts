@@ -2,13 +2,6 @@ import { NextResponse } from "next/server";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL?.replace(/\/$/, "");
 
-/**
- * Returns the Google OAuth consent URL from the backend.
- * The frontend redirects the browser to this URL to start the OAuth flow.
- *
- * The `redirect_uri` parameter tells the backend where to redirect after
- * issuing tokens — in this case, back to our Next.js `/auth/callback` page.
- */
 export async function GET(request: Request) {
   if (!backendUrl) {
     return NextResponse.json(
@@ -17,9 +10,8 @@ export async function GET(request: Request) {
     );
   }
 
-  // Build the redirect_uri that the backend will redirect to after OAuth
   const { origin } = new URL(request.url);
-  const redirectUri = `${origin}/auth/callback`;
+  const redirectUri = `${origin}/callback`;
 
   try {
     const res = await fetch(
