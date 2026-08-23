@@ -10,6 +10,7 @@ import {
   CreditCard,
   Home,
   ShieldCheck,
+  AlertTriangle,
 } from "lucide-react";
 import {
   Sidebar,
@@ -28,6 +29,8 @@ import { Separator } from "@/components/ui/separator";
 const adminNav = [
   { title: "Overview", href: "/admin/overview", icon: LayoutDashboard },
   { title: "Users", href: "/admin/users", icon: Users },
+  { title: "Verifications", href: "/admin/verifications", icon: ShieldCheck },
+  { title: "Disputes", href: "/admin/disputes", icon: AlertTriangle },
   { title: "Jobs", href: "/admin/jobs", icon: Briefcase },
   { title: "Wallets", href: "/admin/wallets", icon: Wallet },
   { title: "Payments", href: "/admin/payments", icon: CreditCard },

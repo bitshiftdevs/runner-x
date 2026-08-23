@@ -2,8 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { api, formatRelativeTime } from "@/lib";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { gqlFetch } from "@/lib/gql-client-browser";
+import { BAN_USER, UNBAN_USER } from "@/lib/graphql/operations";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import {
@@ -21,7 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Users, Search } from "lucide-react";
+import { Users, Search, Ban, CheckCircle2 } from "lucide-react";
 
 function StatusBadge({ status }: { status: string }) {
   const variant:
@@ -134,36 +137,86 @@ export default function UsersPage() {
                     <TableHead>Rating</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Joined</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {users.map((u) => (
-                    <TableRow key={u.id as string}>
-                      <TableCell className="font-medium">
-                        {u.full_name as string}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="capitalize">
-                          {(u.role as string) || "—"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {(u.default_campus as string) || "—"}
-                      </TableCell>
-                      <TableCell>{(u.rating as number) || 0}</TableCell>
-                      <TableCell>
-                        <StatusBadge
-                          status={(u.student_id_status as string) || "pending"}
-                        />
-                      </TableCell>
-                      <TableCell className="text-right text-muted-foreground text-sm">
-                        {formatRelativeTime(u.created_at as string)}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {users.map((u) => {
+                    const isBanned = u.banned as boolean;
+                    return (
+                      <TableRow key={u.id as string} className={isBanned ? "opacity-60" : ""}>
+                        <TableCell className="font-medium">
+                          <div className="flex flex-col">
+                            <span>{u.full_name as string}</span>
+                            {isBanned && (
+                              <Badge variant="destructive" className="w-fit text-xs mt-1">
+                                Banned
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="capitalize">
+                            {(u.role as string) || "—"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {(u.default_campus as string) || "—"}
+                        </TableCell>
+                        <TableCell>{(u.rating as number) || 0}</TableCell>
+                        <TableCell>
+                          <StatusBadge
+                            status={(u.student_id_status as string) || "pending"}
+                          />
+                        </TableCell>
+                        <TableCell className="text-right text-muted-foreground text-sm">
+                          {formatRelativeTime(u.created_at as string)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {isBanned ? (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={async () => {
+                                await gqlFetch(UNBAN_USER, { userId: u.id });
+                                setUsers((prev) =>
+                                  prev.map((x) =>
+                                    x.id === u.id ? { ...x, banned: false } : x,
+                                  ),
+                                );
+                              }}
+                            >
+                              <CheckCircle2 data-icon="inline-start" />
+                              Unban
+                            </Button>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="text-destructive border-destructive/30 hover:bg-destructive/10"
+                              onClick={async () => {
+                                await gqlFetch(BAN_USER, {
+                                  userId: u.id,
+                                  reason: "admin_ban",
+                                });
+                                setUsers((prev) =>
+                                  prev.map((x) =>
+                                    x.id === u.id ? { ...x, banned: true } : x,
+                                  ),
+                                );
+                              }}
+                            >
+                              <Ban data-icon="inline-start" />
+                              Ban
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                   {users.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                      <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
                         No users found
                       </TableCell>
                     </TableRow>

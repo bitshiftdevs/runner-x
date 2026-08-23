@@ -296,6 +296,7 @@ export type BackendProfileRaw = {
   email: string | null;
   fullName: string;
   avatarUrl: string | null;
+  idUrl: string | null;
   isAdmin: boolean;
   studentIdStatus: "pending" | "approved" | "rejected";
   defaultCampus: string | null;

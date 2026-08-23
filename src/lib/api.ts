@@ -98,7 +98,7 @@ export const api = {
             id: u.id,
             fullName: u.fullName,
             phone: u.phoneNumber ?? "",
-            studentIdUrl: u.avatarUrl ?? "",
+            studentIdUrl: u.idUrl ?? "",
             campus: u.defaultCampus ?? "",
             createdAt: u.createdAt,
           })),
@@ -120,28 +120,39 @@ export const api = {
 
     disputes: {
       list: async () => {
-        const data = await gqlFetch<{ disputedErrands: BackendErrand[] }>(
-          DISPUTED_ERRANDS,
-        );
+        const data = await gqlFetch<{
+          disputedErrands: (BackendErrand & {
+            disputeReason?: string | null;
+            requester?: { id: string; fullName: string; avatarUrl?: string | null; rating: number } | null;
+            runner?: { id: string; fullName: string; avatarUrl?: string | null; rating: number } | null;
+          })[];
+        }>(DISPUTED_ERRANDS);
         return {
           disputes: data.disputedErrands.map((d) => ({
             id: d.id,
             title: d.title,
             description: d.description ?? "",
+            disputeReason: d.disputeReason ?? "",
             totalFee: String(d.totalFee),
             runnerEarnings: "",
             status: d.status,
+            category: d.category,
+            urgency: d.urgency,
+            pickupAddress: d.pickupAddress ?? "",
+            deliveryAddress: d.deliveryAddress ?? "",
+            requester: d.requester ?? null,
+            runner: d.runner ?? null,
             createdAt: d.createdAt,
             updatedAt: d.createdAt,
           })),
         };
       },
 
-      resolve: (id: string) =>
+      resolve: (id: string, opts?: { resolution?: string; refundRequester?: boolean }) =>
         gqlFetch(RESOLVE_DISPUTE, {
           errandId: id,
-          resolution: "resolved",
-          refundRequester: false,
+          resolution: opts?.resolution ?? "resolved",
+          refundRequester: opts?.refundRequester ?? false,
         }),
     },
 
@@ -152,24 +163,24 @@ export const api = {
         const limit = opts?.limit ?? 50;
         const offset = opts?.offset ?? 0;
         const page = Math.floor(offset / limit);
-        const data = await gqlFetch<{ allUsers: BackendProfileRaw[] }>(
-          ALL_USERS,
-          {
-            search: opts?.search ?? null,
-            page,
-            size: limit,
-          },
-        );
-        const users = data.allUsers.map((u) => ({
+        const data = await gqlFetch<{
+          allUsers: { items: BackendProfileRaw[]; totalCount: number };
+        }>(ALL_USERS, {
+          search: opts?.search ?? null,
+          page,
+          size: limit,
+        });
+        const users = data.allUsers.items.map((u) => ({
           id: u.id,
           full_name: u.fullName,
           role: u.isAdmin ? "admin" : "both",
           default_campus: u.defaultCampus,
           rating: u.rating,
           student_id_status: u.studentIdStatus,
+          banned: u.banned,
           created_at: u.createdAt,
         }));
-        return { users, total: users.length };
+        return { users, total: data.allUsers.totalCount };
       },
     },
 
@@ -180,15 +191,14 @@ export const api = {
         const limit = opts?.limit ?? 50;
         const offset = opts?.offset ?? 0;
         const page = Math.floor(offset / limit);
-        const data = await gqlFetch<{ allErrands: BackendErrand[] }>(
-          ALL_ERRANDS,
-          {
-            status: opts?.status ?? null,
-            page,
-            size: limit,
-          },
-        );
-        const jobs = data.allErrands.map((e) => ({
+        const data = await gqlFetch<{
+          allErrands: { items: BackendErrand[]; totalCount: number };
+        }>(ALL_ERRANDS, {
+          status: opts?.status ?? null,
+          page,
+          size: limit,
+        });
+        const jobs = data.allErrands.items.map((e) => ({
           id: e.id,
           title: e.title,
           category: e.category,
@@ -196,7 +206,7 @@ export const api = {
           total_fee: e.totalFee,
           created_at: e.createdAt,
         }));
-        return { jobs, total: jobs.length };
+        return { jobs, total: data.allErrands.totalCount };
       },
     },
 
@@ -205,20 +215,26 @@ export const api = {
         const limit = opts?.limit ?? 50;
         const offset = opts?.offset ?? 0;
         const page = Math.floor(offset / limit);
-        const data = await gqlFetch<{ allWallets: BackendWallet[] }>(
-          ALL_WALLETS,
-          { page, size: limit },
-        );
-        const wallets = data.allWallets.map((w) => ({
+        const data = await gqlFetch<{
+          allWallets: {
+            items: (BackendWallet & {
+              runner?: { id: string; fullName: string; avatarUrl?: string | null } | null;
+            })[];
+            totalCount: number;
+          };
+        }>(ALL_WALLETS, { page, size: limit });
+        const wallets = data.allWallets.items.map((w) => ({
           id: w.id,
-          profiles: null as { full_name: string } | null,
+          profiles: w.runner
+            ? { full_name: w.runner.fullName }
+            : null,
           available_balance: w.availableBalance,
           pending_balance: w.pendingBalance,
           total_earned: w.totalEarned,
           total_withdrawn: w.totalWithdrawn,
           updated_at: new Date().toISOString(),
         }));
-        return { wallets, total: wallets.length };
+        return { wallets, total: data.allWallets.totalCount };
       },
     },
 
@@ -227,15 +243,14 @@ export const api = {
         const limit = opts?.limit ?? 50;
         const offset = opts?.offset ?? 0;
         const page = Math.floor(offset / limit);
-        const data = await gqlFetch<{ allPayments: BackendPayment[] }>(
-          ALL_PAYMENTS,
-          {
-            status: opts?.status ?? null,
-            page,
-            size: limit,
-          },
-        );
-        const payments = data.allPayments.map((p) => ({
+        const data = await gqlFetch<{
+          allPayments: { items: BackendPayment[]; totalCount: number };
+        }>(ALL_PAYMENTS, {
+          status: opts?.status ?? null,
+          page,
+          size: limit,
+        });
+        const payments = data.allPayments.items.map((p) => ({
           id: p.id,
           external_ref: p.externalRef,
           amount: p.amount,
@@ -243,7 +258,7 @@ export const api = {
           status: p.status,
           created_at: p.createdAt,
         }));
-        return { payments, total: payments.length };
+        return { payments, total: data.allPayments.totalCount };
       },
     },
   },

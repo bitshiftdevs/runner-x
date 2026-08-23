@@ -288,17 +288,20 @@ export const UPDATE_NOTIFICATION_PREFERENCES = gql`
 export const ALL_USERS = gql`
   query AllUsers($search: String, $page: Int, $size: Int) {
     allUsers(search: $search, page: $page, size: $size) {
-      id
-      email
-      fullName
-      avatarUrl
-      isAdmin
-      studentIdStatus
-      defaultCampus
-      phoneNumber
-      rating
-      banned
-      createdAt
+      items {
+        id
+        email
+        fullName
+        avatarUrl
+        isAdmin
+        studentIdStatus
+        defaultCampus
+        phoneNumber
+        rating
+        banned
+        createdAt
+      }
+      totalCount
     }
   }
 `;
@@ -308,7 +311,7 @@ export const PENDING_VERIFICATIONS = gql`
       id
       fullName
       phoneNumber
-      avatarUrl
+      idUrl
       defaultCampus
       createdAt
     }
@@ -316,11 +319,19 @@ export const PENDING_VERIFICATIONS = gql`
 `;
 export const ALL_ERRANDS = gql`
   query AllErrands($status: ErrandStatus, $page: Int, $size: Int) {
-    allErrands(status: $status, page: $page, size: $size) { ${ERRAND_FIELDS} }
+    allErrands(status: $status, page: $page, size: $size) {
+      items { ${ERRAND_FIELDS} }
+      totalCount
+    }
   }
 `;
 export const DISPUTED_ERRANDS = gql`
-  query DisputedErrands { disputedErrands { ${ERRAND_FIELDS} } }
+  query DisputedErrands {
+    disputedErrands {
+      ${ERRAND_FIELDS_WITH_PROFILES}
+      disputeReason
+    }
+  }
 `;
 export const PLATFORM_STATS = gql`
   query PlatformStats {
@@ -364,34 +375,54 @@ export const BAN_USER = gql`
     }
   }
 `;
+export const UNBAN_USER = gql`
+  mutation UnbanUser($userId: ID!) {
+    unbanUser(userId: $userId) {
+      id
+      fullName
+      banned
+    }
+  }
+`;
 export const ALL_PAYMENTS = gql`
   query AllPayments($status: PaymentStatus, $page: Int, $size: Int) {
     allPayments(status: $status, page: $page, size: $size) {
-      id
-      errandId
-      userId
-      amount
-      currency
-      channel
-      payer
-      providerRef
-      externalRef
-      status
-      createdAt
-      updatedAt
+      items {
+        id
+        errandId
+        userId
+        amount
+        currency
+        channel
+        payer
+        providerRef
+        externalRef
+        status
+        createdAt
+        updatedAt
+      }
+      totalCount
     }
   }
 `;
 export const ALL_WALLETS = gql`
   query AllWallets($page: Int, $size: Int) {
     allWallets(page: $page, size: $size) {
-      id
-      runnerId
-      availableBalance
-      pendingBalance
-      totalEarned
-      totalWithdrawn
-      currency
+      items {
+        id
+        runnerId
+        availableBalance
+        pendingBalance
+        totalEarned
+        totalWithdrawn
+        currency
+        runner {
+          id
+          fullName
+          avatarUrl
+        }
+      }
+      totalCount
     }
   }
 `;
