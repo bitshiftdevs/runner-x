@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DataTable, type Column } from "@/components/admin/data-table";
+import { AvatarUser } from "@/components/admin/avatar-user";
 import { Users, Search, Ban, CheckCircle2 } from "lucide-react";
 
 type UserRow = {
@@ -74,12 +75,12 @@ export default function UsersPage() {
   const columns: Column<UserRow>[] = [
     {
       key: "full_name",
-      header: "Name",
+      header: "User",
       render: (u) => (
-        <div className="flex flex-col">
-          <span className="font-medium">{u.full_name}</span>
+        <div className="flex flex-col gap-1">
+          <AvatarUser name={u.full_name} subtitle={u.default_campus} />
           {u.banned && (
-            <Badge variant="destructive" className="w-fit text-xs mt-1">
+            <Badge variant="destructive" className="w-fit text-xs ml-11">
               Banned
             </Badge>
           )}
@@ -94,12 +95,6 @@ export default function UsersPage() {
           {u.role || "—"}
         </Badge>
       ),
-    },
-    {
-      key: "default_campus",
-      header: "Campus",
-      className: "text-muted-foreground",
-      render: (u) => u.default_campus || "—",
     },
     {
       key: "rating",
@@ -128,28 +123,6 @@ export default function UsersPage() {
       header: "Joined",
       className: "text-right text-muted-foreground text-sm",
       render: (u) => formatRelativeTime(u.created_at),
-    },
-    {
-      key: "actions",
-      header: "",
-      className: "text-right",
-      render: (u) =>
-        u.banned ? (
-          <Button size="sm" variant="outline" onClick={() => handleBanToggle(u)}>
-            <CheckCircle2 data-icon="inline-start" />
-            Unban
-          </Button>
-        ) : (
-          <Button
-            size="sm"
-            variant="outline"
-            className="text-destructive border-destructive/30 hover:bg-destructive/10"
-            onClick={() => handleBanToggle(u)}
-          >
-            <Ban data-icon="inline-start" />
-            Ban
-          </Button>
-        ),
     },
   ];
 
@@ -204,6 +177,24 @@ export default function UsersPage() {
             loading={loading}
             onPageChange={setPage}
             emptyMessage="No users found"
+            actions={(u) =>
+              u.banned ? (
+                <Button size="sm" variant="outline" onClick={() => handleBanToggle(u)}>
+                  <CheckCircle2 data-icon="inline-start" />
+                  Unban
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="text-destructive border-destructive/30 hover:bg-destructive/10"
+                  onClick={() => handleBanToggle(u)}
+                >
+                  <Ban data-icon="inline-start" />
+                  Ban
+                </Button>
+              )
+            }
           />
         </CardContent>
       </Card>

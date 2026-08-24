@@ -324,6 +324,8 @@ export const PLATFORM_STATS = gql`
       activeErrands
       completedErrands
       totalRevenue
+      totalPlatformRevenue
+      totalPaystackFees
       pendingVerifications
       activeDisputes
       totalPayments
@@ -407,6 +409,9 @@ export const ALL_PAYMENTS = gql`
         providerRef
         externalRef
         status
+        runnerShare
+        platformShare
+        paystackFee
         createdAt
         updatedAt
       }

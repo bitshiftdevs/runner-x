@@ -1,30 +1,29 @@
 "use client";
 
+import { BarChart3, Layers, TrendingUp, Users } from "lucide-react";
 import { useEffect, useState } from "react";
-import { gqlFetch } from "@/lib/gql-client-browser";
-import { ANALYTICS_STATS } from "@/lib/graphql/operations";
-import { PESEWAS_PER_GHS } from "@/lib/money";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
 import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-  type ChartConfig,
 } from "@/components/ui/chart";
-import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import { TrendingUp, BarChart3, Users, Layers } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { formatCurrency } from "@/lib";
+import { gqlFetch } from "@/lib/gql-client-browser";
+import { ANALYTICS_STATS } from "@/lib/graphql/operations";
 
 type DailyMetric = { date: string; count: number; amount: number };
 type CategoryBreakdown = { category: string; count: number; revenue: number };
@@ -70,10 +69,6 @@ function formatDate(d: string) {
   return date.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 
-function formatGhs(pesewas: number) {
-  return `₵${(pesewas / PESEWAS_PER_GHS).toFixed(2)}`;
-}
-
 export default function AnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -102,7 +97,7 @@ export default function AnalyticsPage() {
 
   const revenueData = data.dailyRevenue.map((d) => ({
     date: formatDate(d.date),
-    revenue: d.amount / PESEWAS_PER_GHS,
+    revenue: formatCurrency(d.amount),
   }));
 
   const errandsData = data.dailyErrands.map((d) => ({
@@ -142,7 +137,7 @@ export default function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-emerald-600">
-              {formatGhs(totalRevenue)}
+              {formatCurrency(totalRevenue)}
             </div>
           </CardContent>
         </Card>
@@ -183,7 +178,7 @@ export default function AnalyticsPage() {
                 No revenue data yet
               </p>
             ) : (
-              <ChartContainer config={revenueChartConfig} className="h-[250px]">
+              <ChartContainer config={revenueChartConfig} className="h-62.5">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={revenueData}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -223,7 +218,7 @@ export default function AnalyticsPage() {
                 No errand data yet
               </p>
             ) : (
-              <ChartContainer config={errandsChartConfig} className="h-[250px]">
+              <ChartContainer config={errandsChartConfig} className="h-62.5">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={errandsData}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -264,7 +259,7 @@ export default function AnalyticsPage() {
                 No user data yet
               </p>
             ) : (
-              <ChartContainer config={usersChartConfig} className="h-[250px]">
+              <ChartContainer config={usersChartConfig} className="h-62.5">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={usersData}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -321,7 +316,8 @@ export default function AnalyticsPage() {
                           className="h-full rounded-md transition-all"
                           style={{
                             width: `${pct}%`,
-                            backgroundColor: categoryColors[i % categoryColors.length],
+                            backgroundColor:
+                              categoryColors[i % categoryColors.length],
                           }}
                         />
                       </div>
@@ -329,7 +325,7 @@ export default function AnalyticsPage() {
                         {cat.count}
                       </div>
                       <div className="w-20 text-right text-xs font-medium">
-                        {formatGhs(cat.revenue)}
+                        {formatCurrency(cat.revenue)}
                       </div>
                     </div>
                   );

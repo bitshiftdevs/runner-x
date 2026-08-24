@@ -6,23 +6,23 @@
  */
 
 import { gqlFetch, invalidateToken } from "@/lib/gql-client-browser";
+import type {
+  BackendErrand,
+  BackendPayment,
+  BackendProfileRaw,
+  BackendWallet,
+} from "@/lib/graphql/adapters";
 import {
   ALL_ERRANDS,
   ALL_PAYMENTS,
   ALL_USERS,
   ALL_WALLETS,
   DISPUTED_ERRANDS,
-  PLATFORM_STATS,
   PENDING_VERIFICATIONS,
+  PLATFORM_STATS,
   RESOLVE_DISPUTE,
   VERIFY_STUDENT_ID,
 } from "@/lib/graphql/operations";
-import {
-  type BackendErrand,
-  type BackendPayment,
-  type BackendProfileRaw,
-  type BackendWallet,
-} from "@/lib/graphql/adapters";
 import type { Profile } from "@/types";
 
 // ── Helpers ────────────────────────────────────────────────────────────
@@ -79,6 +79,8 @@ export const api = {
         activeDisputes: s.activeDisputes,
         totalUsers: s.totalUsers,
         totalRevenue: s.totalRevenue,
+        totalPlatformRevenue: s.totalPlatformRevenue,
+        totalPaystackFees: s.totalPaystackFees,
         totalPayments: s.totalPayments,
         totalWalletBalance: s.totalWalletBalance,
         activeWallets: s.activeWallets,
@@ -123,8 +125,18 @@ export const api = {
         const data = await gqlFetch<{
           disputedErrands: (BackendErrand & {
             disputeReason?: string | null;
-            requester?: { id: string; fullName: string; avatarUrl?: string | null; rating: number } | null;
-            runner?: { id: string; fullName: string; avatarUrl?: string | null; rating: number } | null;
+            requester?: {
+              id: string;
+              fullName: string;
+              avatarUrl?: string | null;
+              rating: number;
+            } | null;
+            runner?: {
+              id: string;
+              fullName: string;
+              avatarUrl?: string | null;
+              rating: number;
+            } | null;
           })[];
         }>(DISPUTED_ERRANDS);
         return {
@@ -148,7 +160,10 @@ export const api = {
         };
       },
 
-      resolve: (id: string, opts?: { resolution?: string; refundRequester?: boolean }) =>
+      resolve: (
+        id: string,
+        opts?: { resolution?: string; refundRequester?: boolean },
+      ) =>
         gqlFetch(RESOLVE_DISPUTE, {
           errandId: id,
           resolution: opts?.resolution ?? "resolved",
@@ -158,7 +173,11 @@ export const api = {
 
     users: {
       list: async (
-        opts?: PaginatedQuery & { role?: string; status?: string; search?: string },
+        opts?: PaginatedQuery & {
+          role?: string;
+          status?: string;
+          search?: string;
+        },
       ) => {
         const limit = opts?.limit ?? 50;
         const offset = opts?.offset ?? 0;
@@ -218,16 +237,18 @@ export const api = {
         const data = await gqlFetch<{
           allWallets: {
             items: (BackendWallet & {
-              runner?: { id: string; fullName: string; avatarUrl?: string | null } | null;
+              runner?: {
+                id: string;
+                fullName: string;
+                avatarUrl?: string | null;
+              } | null;
             })[];
             totalCount: number;
           };
         }>(ALL_WALLETS, { page, size: limit });
         const wallets = data.allWallets.items.map((w) => ({
           id: w.id,
-          profiles: w.runner
-            ? { full_name: w.runner.fullName }
-            : null,
+          profiles: w.runner ? { full_name: w.runner.fullName } : null,
           available_balance: w.availableBalance,
           pending_balance: w.pendingBalance,
           total_earned: w.totalEarned,
@@ -255,6 +276,10 @@ export const api = {
           external_ref: p.externalRef,
           amount: p.amount,
           channel: p.channel,
+          payer: p.payer,
+          runner_share: p.runnerShare,
+          platform_share: p.platformShare,
+          paystack_fee: p.paystackFee,
           status: p.status,
           created_at: p.createdAt,
         }));

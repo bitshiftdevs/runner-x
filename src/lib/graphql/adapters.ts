@@ -1,8 +1,6 @@
+import { pesewasToGhs } from "@/lib/money";
 import type {
-  Job,
   JobCategory,
-  JobProfile,
-  JobStatus,
   Message,
   Payment,
   PaymentStatus,
@@ -15,8 +13,6 @@ import type {
   RunnerWallet,
   WalletTransaction,
 } from "@/types/wallet";
-import { calculatePricing } from "@/lib/pricing";
-import { pesewasToGhs } from "@/lib/money";
 
 /**
  * Type adapters between the backend GraphQL schema and the pre-existing
@@ -97,57 +93,6 @@ export type BackendErrand = {
   runner: BackendErrandProfile | null;
 };
 
-/**
- * Backend fees come in as pesewas (integer). The client `Job` type is a
- * decimal-cedis carryover from the Supabase era, so we translate at the
- * seam and let display code call `formatCurrency` unchanged. Once the UI
- * flips to pesewas, remove the conversions here and update `Job` in
- * `src/types/job.ts`.
- */
-export function toClientJob(e: BackendErrand): Job {
-  const category = backendCategoryToClient[e.category] ?? "others";
-  const urgency = backendUrgencyToClient[e.urgency] ?? "normal";
-  const totalGhs = pesewasToGhs(e.totalFee);
-  const pricing = calculatePricing(1.5, urgency, category);
-  const platformFee = Math.round(totalGhs * 0.25 * 100) / 100;
-  const runnerEarnings = Math.round((totalGhs - platformFee) * 100) / 100;
-
-  return {
-    id: e.id,
-    requesterId: e.requesterId,
-    runnerId: e.runnerId,
-    title: e.title,
-    description: e.description ?? "",
-    category,
-    urgency,
-    pickupLocation: {
-      lat: e.pickupLat ?? 0,
-      lng: e.pickupLng ?? 0,
-      address: e.pickupAddress ?? "",
-    },
-    deliveryLocation: {
-      lat: e.deliveryLat ?? 0,
-      lng: e.deliveryLng ?? 0,
-      address: e.deliveryAddress ?? "",
-    },
-    vendorName: null,
-    photoUrls: [],
-    baseFee: pesewasToGhs(e.baseFee),
-    distanceFee: pesewasToGhs(e.distanceFee),
-    urgencyFee: pesewasToGhs(e.urgencyFee),
-    categoryFee: pesewasToGhs(e.categoryFee),
-    totalFee: totalGhs,
-    runnerEarnings,
-    platformFee: pricing.platformFee,
-    status: (e.status as JobStatus) ?? "posted",
-    expiresAt: e.expiresAt,
-    createdAt: e.createdAt,
-    updatedAt: e.createdAt,
-    requester: e.requester ? { id: e.requester.id, fullName: e.requester.fullName, avatarUrl: e.requester.avatarUrl, rating: e.requester.rating } : null,
-    runner: e.runner ? { id: e.runner.id, fullName: e.runner.fullName, avatarUrl: e.runner.avatarUrl, rating: e.runner.rating } : null,
-  };
-}
-
 // ── Message ─────────────────────────────────────────────────────────────
 
 export type BackendMessage = {
@@ -185,6 +130,9 @@ export type BackendPayment = {
   payer: string | null;
   providerRef: string | null;
   externalRef: string;
+  runnerShare: number;
+  platformShare: number;
+  paystackFee: number;
   status: string;
   createdAt: string;
   updatedAt: string;

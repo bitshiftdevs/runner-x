@@ -1,10 +1,19 @@
-import { CURRENCY_SYMBOL } from "@/constants";
-import { PESEWAS_PER_GHS } from "@/lib/money";
+export const PESEWAS_PER_GHS = 100;
 
-export function formatCurrency(amount: number | string): string {
-  const pesewas = Number(amount);
-  const ghs = pesewas / PESEWAS_PER_GHS;
-  return `${CURRENCY_SYMBOL}${ghs.toFixed(2)}`;
+export function formatCurrency(pesewas: number): string {
+  const formatted = Intl.NumberFormat("en-GH", {
+    style: "currency",
+    currency: "GHS",
+    currencyDisplay: "narrowSymbol",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(pesewas / PESEWAS_PER_GHS);
+
+  return formatted.replace("GH₵", "₵");
+}
+export function formatDate(d: string) {
+  const date = new Date(d);
+  return date.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 
 export function formatDistance(km: number | string): string {

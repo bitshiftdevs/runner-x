@@ -23,6 +23,8 @@ type AdminStats = {
   activeDisputes: number;
   totalUsers: number;
   totalRevenue: number;
+  totalPlatformRevenue: number;
+  totalPaystackFees: number;
   totalPayments: number;
   totalWalletBalance: number;
   activeWallets: number;
@@ -50,7 +52,9 @@ type AdminDispute = {
 
 const metrics = [
   { key: "totalUsers", label: "Total Users", icon: Users, color: "text-primary" },
-  { key: "totalRevenue", label: "Revenue", icon: DollarSign, color: "text-emerald-600", isCurrency: true },
+  { key: "totalRevenue", label: "GMV", icon: DollarSign, color: "text-primary", isCurrency: true },
+  { key: "totalPlatformRevenue", label: "Platform Revenue", icon: DollarSign, color: "text-emerald-600", isCurrency: true },
+  { key: "totalPaystackFees", label: "Paystack Fees", icon: CreditCard, color: "text-muted-foreground", isCurrency: true },
   { key: "activeDisputes", label: "Active Disputes", icon: AlertTriangle, color: "text-destructive" },
   { key: "pendingVerifications", label: "Pending Verifs", icon: ShieldCheck, color: "text-amber-600" },
   { key: "totalPayments", label: "Total Payments", icon: CreditCard, color: "text-primary" },
@@ -123,7 +127,7 @@ export default function OverviewPage() {
                     : stats[m.key as keyof AdminStats]
                   : "—"}
               </div>
-              {(m.key === "totalRevenue" || m.key === "totalWalletBalance") && (
+              {(m.key === "totalRevenue" || m.key === "totalPlatformRevenue" || m.key === "totalPaystackFees" || m.key === "totalWalletBalance") && (
                 <p className="text-xs text-muted-foreground mt-1">All time</p>
               )}
             </CardContent>

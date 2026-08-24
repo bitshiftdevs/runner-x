@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { api, formatCurrency, formatRelativeTime } from "@/lib";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { CreditCard } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { type Column, DataTable } from "@/components/admin/data-table";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -11,14 +12,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DataTable, type Column } from "@/components/admin/data-table";
-import { CreditCard } from "lucide-react";
+import { api, formatRelativeTime } from "@/lib";
+import { formatCurrency } from "@/lib/formatters";
 
 type PaymentRow = {
   id: string;
   external_ref: string;
   amount: number;
-  channel: string;
+  channel: string | null;
+  payer: string | null;
+  runner_share: number;
+  platform_share: number;
+  paystack_fee: number;
   status: string;
   created_at: string;
 };
@@ -73,16 +78,42 @@ export default function PaymentsPage() {
       render: (p) => p.external_ref?.slice(0, 12) || "—",
     },
     {
-      key: "amount",
-      header: "Amount",
-      className: "font-semibold text-primary",
-      render: (p) => formatCurrency(p.amount),
+      key: "payer",
+      header: "Payer",
+      className: "text-muted-foreground text-sm",
+      render: (p) => p.payer || "—",
     },
     {
       key: "channel",
       header: "Channel",
+      className: "text-muted-foreground capitalize",
+      render: (p) => p.channel?.replaceAll("_", " ") || "—",
+    },
+    {
+      key: "amount",
+      header: "Total",
+      className: "font-semibold",
+      render: (p) => formatCurrency(p.amount),
+    },
+    {
+      key: "runner_share",
+      header: "Runner",
       className: "text-muted-foreground",
-      render: (p) => p.channel || "—",
+      render: (p) => {
+        return formatCurrency(p.runner_share);
+      },
+    },
+    {
+      key: "platform_share",
+      header: "Platform",
+      className: "text-emerald-600 font-medium",
+      render: (p) => formatCurrency(p.platform_share),
+    },
+    {
+      key: "paystack_fee",
+      header: "Paystack Fee",
+      className: "text-muted-foreground",
+      render: (p) => formatCurrency(p.paystack_fee),
     },
     {
       key: "status",
@@ -120,7 +151,7 @@ export default function PaymentsPage() {
               value={statusFilter || undefined}
               onValueChange={(v) => setStatusFilter(v ?? "")}
             >
-              <SelectTrigger className="w-full sm:w-[160px]">
+              <SelectTrigger className="w-full sm:w-40">
                 <SelectValue placeholder="All Statuses" />
               </SelectTrigger>
               <SelectContent>

@@ -35,6 +35,7 @@ type DataTableProps<T> = {
   loading: boolean;
   onPageChange: (page: number) => void;
   emptyMessage?: string;
+  actions?: (row: T) => ReactNode;
 };
 
 export function DataTable<T extends { id: string | number }>({
@@ -46,8 +47,12 @@ export function DataTable<T extends { id: string | number }>({
   loading,
   onPageChange,
   emptyMessage = "No results found",
+  actions,
 }: DataTableProps<T>) {
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const allColumns = actions
+    ? [...columns, { key: "__actions__", header: "", className: "text-right w-0" } as Column<T>]
+    : columns;
 
   return (
     <div className="flex flex-col gap-3">
@@ -55,7 +60,7 @@ export function DataTable<T extends { id: string | number }>({
         <Table>
           <TableHeader>
             <TableRow>
-              {columns.map((col) => (
+              {allColumns.map((col) => (
                 <TableHead key={col.key} className={col.className}>
                   {col.header}
                 </TableHead>
@@ -66,7 +71,7 @@ export function DataTable<T extends { id: string | number }>({
             {loading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
-                  {columns.map((col) => (
+                  {allColumns.map((col) => (
                     <TableCell key={col.key}>
                       <Skeleton className="h-5 w-full" />
                     </TableCell>
@@ -76,7 +81,7 @@ export function DataTable<T extends { id: string | number }>({
             ) : data.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={allColumns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
                   {emptyMessage}
@@ -90,6 +95,11 @@ export function DataTable<T extends { id: string | number }>({
                       {col.render(row)}
                     </TableCell>
                   ))}
+                  {actions && (
+                    <TableCell className="text-right">
+                      {actions(row)}
+                    </TableCell>
+                  )}
                 </TableRow>
               ))
             )}
