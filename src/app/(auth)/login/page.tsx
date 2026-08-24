@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 
 import { APP_NAME } from "@/constants";
 
@@ -17,8 +17,10 @@ import { APP_NAME } from "@/constants";
  * 5. The /auth/callback page stores the tokens in httpOnly cookies and
  *    redirects to /admin.
  */
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isUnauthorized = searchParams.get("error") === "unauthorized";
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -92,11 +94,24 @@ export default function LoginPage() {
           {loading ? "Redirecting…" : "Sign in with Google"}
         </button>
         {error && <p className="text-error text-sm text-center">{error}</p>}
+        {isUnauthorized && !error && (
+          <p className="text-error text-sm text-center">
+            Access denied. This portal is for administrators only.
+          </p>
+        )}
       </div>
 
       <p className="text-center text-xs text-on-surface-variant font-mono">
         Admin access only. Unauthorized accounts will be rejected.
       </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginContent />
+    </Suspense>
   );
 }

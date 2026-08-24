@@ -21,6 +21,7 @@ export const SIGN_IN_WITH_GOOGLE = gql`
     isAdmin
     studentIdStatus
     defaultCampus
+    defaultHostel
     phoneNumber
     rating
     banned
@@ -41,6 +42,7 @@ export const REFRESH_TOKEN = gql`
         isAdmin
         studentIdStatus
         defaultCampus
+        defaultHostel
         phoneNumber
         rating
         banned
@@ -60,6 +62,7 @@ export const ME_QUERY = gql`
       isAdmin
       studentIdStatus
       defaultCampus
+      defaultHostel
       phoneNumber
       rating
       banned
@@ -78,6 +81,7 @@ export type BackendProfile = {
   isAdmin: boolean;
   studentIdStatus: VerificationStatus;
   defaultCampus: string | null;
+  defaultHostel: string | null;
   phoneNumber: string | null;
   rating: number;
   banned: boolean;

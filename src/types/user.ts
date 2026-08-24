@@ -8,6 +8,7 @@ export type Profile = {
   photoUrl: string | null;
   bio: string | null;
   role: UserRole;
+  isAdmin: boolean;
   studentIdUrl: string | null;
   studentIdVerified: boolean;
   campus: string;

@@ -26,6 +26,10 @@ export default function AdminLayout({
       try {
         const data = await api.auth.session();
         if (data.user) {
+          if (!data.user.isAdmin) {
+            router.push("/login?error=unauthorized");
+            return;
+          }
           setUser(data.user);
         } else {
           router.push("/login");
