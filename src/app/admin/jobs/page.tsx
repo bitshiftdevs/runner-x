@@ -49,18 +49,24 @@ export default function JobsPage() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [statusFilter, setStatusFilter] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const pageSize = 20;
 
   const fetchJobs = useCallback(async () => {
     setLoading(true);
-    const d = await api.admin.jobs.list({
-      status: statusFilter || undefined,
-      page,
-      limit: pageSize,
-    });
-    setJobs(d.jobs as JobRow[]);
-    setTotal(d.total);
-    setLoading(false);
+    try {
+      const d = await api.admin.jobs.list({
+        status: statusFilter || undefined,
+        page,
+        limit: pageSize,
+      });
+      setJobs(d.jobs as JobRow[]);
+      setTotal(d.total);
+    } catch {
+      setError("Failed to load jobs");
+    } finally {
+      setLoading(false);
+    }
   }, [page, statusFilter]);
 
   useEffect(() => {
@@ -124,6 +130,7 @@ export default function JobsPage() {
         <p className="text-sm text-muted-foreground">
           View and manage all platform jobs
         </p>
+        {error && <p className="text-sm text-destructive mt-1">{error}</p>}
       </div>
 
       <Card>

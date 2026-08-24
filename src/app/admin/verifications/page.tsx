@@ -28,12 +28,19 @@ export default function VerificationsPage() {
   const [verifications, setVerifications] = useState<Verification[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Verification | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api.admin.verifications.list().then((d) => {
-      setVerifications(d.users ?? []);
-      setLoading(false);
-    });
+    api.admin.verifications
+      .list()
+      .then((d) => {
+        setVerifications(d.users ?? []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Failed to load verifications");
+        setLoading(false);
+      });
   }, []);
 
   const handleApprove = (id: string) => {
@@ -58,6 +65,7 @@ export default function VerificationsPage() {
         <p className="text-sm text-muted-foreground">
           Review and approve student ID submissions
         </p>
+        {error && <p className="text-sm text-destructive mt-1">{error}</p>}
       </div>
 
       <Card>

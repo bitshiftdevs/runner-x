@@ -72,13 +72,23 @@ function formatDate(d: string) {
 export default function AnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    gqlFetch<{ analyticsStats: AnalyticsData }>(ANALYTICS_STATS).then((d) => {
-      setData(d.analyticsStats);
-      setLoading(false);
-    });
+    gqlFetch<{ analyticsStats: AnalyticsData }>(ANALYTICS_STATS)
+      .then((d) => {
+        setData(d.analyticsStats);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Failed to load analytics");
+        setLoading(false);
+      });
   }, []);
+
+  if (error) {
+    return <p className="text-sm text-destructive">{error}</p>;
+  }
 
   if (loading) {
     return (

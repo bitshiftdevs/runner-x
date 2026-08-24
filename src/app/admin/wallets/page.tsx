@@ -21,14 +21,20 @@ export default function WalletsPage() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
+  const [error, setError] = useState<string | null>(null);
   const pageSize = 20;
 
   const fetchWallets = useCallback(async () => {
     setLoading(true);
-    const d = await api.admin.wallets.list({ page, limit: pageSize });
-    setWallets(d.wallets as WalletRow[]);
-    setTotal(d.total);
-    setLoading(false);
+    try {
+      const d = await api.admin.wallets.list({ page, limit: pageSize });
+      setWallets(d.wallets as WalletRow[]);
+      setTotal(d.total);
+    } catch {
+      setError("Failed to load wallets");
+    } finally {
+      setLoading(false);
+    }
   }, [page]);
 
   useEffect(() => {
@@ -81,6 +87,7 @@ export default function WalletsPage() {
           <Wallet className="size-6" />
           Wallets
         </h1>
+        {error && <p className="text-sm text-destructive mt-1">{error}</p>}
         <p className="text-sm text-muted-foreground">
           Runner wallet balances and earnings
         </p>

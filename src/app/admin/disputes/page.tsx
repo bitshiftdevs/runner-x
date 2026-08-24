@@ -55,12 +55,19 @@ export default function DisputesPage() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Dispute | null>(null);
   const [refundRequester, setRefundRequester] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api.admin.disputes.list().then((d) => {
-      setDisputes(d.disputes ?? []);
-      setLoading(false);
-    });
+    api.admin.disputes
+      .list()
+      .then((d) => {
+        setDisputes(d.disputes ?? []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Failed to load disputes");
+        setLoading(false);
+      });
   }, []);
 
   const handleResolve = (id: string) => {
@@ -83,6 +90,7 @@ export default function DisputesPage() {
         <p className="text-sm text-muted-foreground">
           Review and resolve disputed errands
         </p>
+        {error && <p className="text-sm text-destructive mt-1">{error}</p>}
       </div>
 
       <Card>

@@ -37,19 +37,25 @@ export default function UsersPage() {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const pageSize = 20;
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
-    const d = await api.admin.users.list({
-      search: search || undefined,
-      role: roleFilter || undefined,
-      page,
-      limit: pageSize,
-    });
-    setUsers(d.users as UserRow[]);
-    setTotal(d.total);
-    setLoading(false);
+    try {
+      const d = await api.admin.users.list({
+        search: search || undefined,
+        role: roleFilter || undefined,
+        page,
+        limit: pageSize,
+      });
+      setUsers(d.users as UserRow[]);
+      setTotal(d.total);
+    } catch {
+      setError("Failed to load users");
+    } finally {
+      setLoading(false);
+    }
   }, [page, search, roleFilter]);
 
   useEffect(() => {
@@ -136,6 +142,7 @@ export default function UsersPage() {
         <p className="text-sm text-muted-foreground">
           Manage platform users and verification status
         </p>
+        {error && <p className="text-sm text-destructive mt-1">{error}</p>}
       </div>
 
       <Card>

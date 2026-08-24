@@ -68,21 +68,24 @@ export default function OverviewPage() {
   const [disputes, setDisputes] = useState<AdminDispute[]>([]);
   const [loadingVerif, setLoadingVerif] = useState(true);
   const [loadingDisputes, setLoadingDisputes] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api.admin.stats().then(setStats);
+    api.admin.stats().then(setStats).catch(() => setError("Failed to load stats"));
     api.admin.verifications
       .list()
       .then((d) => {
         setVerifications(d.users ?? []);
         setLoadingVerif(false);
-      });
+      })
+      .catch(() => setLoadingVerif(false));
     api.admin.disputes
       .list()
       .then((d) => {
         setDisputes(d.disputes ?? []);
         setLoadingDisputes(false);
-      });
+      })
+      .catch(() => setLoadingDisputes(false));
   }, []);
 
   const handleApprove = (id: string) => {
@@ -107,6 +110,7 @@ export default function OverviewPage() {
         <p className="text-sm text-muted-foreground">
           Platform statistics and pending actions
         </p>
+        {error && <p className="text-sm text-destructive mt-1">{error}</p>}
       </div>
 
       {/* Metric Cards */}

@@ -48,18 +48,24 @@ export default function PaymentsPage() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [statusFilter, setStatusFilter] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const pageSize = 20;
 
   const fetchPayments = useCallback(async () => {
     setLoading(true);
-    const d = await api.admin.payments.list({
-      status: statusFilter || undefined,
-      page,
-      limit: pageSize,
-    });
-    setPayments(d.payments as PaymentRow[]);
-    setTotal(d.total);
-    setLoading(false);
+    try {
+      const d = await api.admin.payments.list({
+        status: statusFilter || undefined,
+        page,
+        limit: pageSize,
+      });
+      setPayments(d.payments as PaymentRow[]);
+      setTotal(d.total);
+    } catch {
+      setError("Failed to load payments");
+    } finally {
+      setLoading(false);
+    }
   }, [page, statusFilter]);
 
   useEffect(() => {
@@ -142,6 +148,7 @@ export default function PaymentsPage() {
         <p className="text-sm text-muted-foreground">
           Transaction history and payment records
         </p>
+        {error && <p className="text-sm text-destructive mt-1">{error}</p>}
       </div>
 
       <Card>

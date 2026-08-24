@@ -16,6 +16,19 @@ export const metadata: Metadata = {
   title: "Runnerx — Campus Hustle, Delivered Fast",
   description:
     "Student-only hyper-local dispatch marketplace for university campuses in Ghana",
+  openGraph: {
+    title: "Runnerx — Campus Hustle, Delivered Fast",
+    description:
+      "Student-only hyper-local dispatch marketplace for university campuses in Ghana",
+    type: "website",
+    siteName: "Runnerx",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Runnerx — Campus Hustle, Delivered Fast",
+    description:
+      "Student-only hyper-local dispatch marketplace for university campuses in Ghana",
+  },
 };
 
 import { SplashScreen } from "@/components/ui/splash-screen";
