@@ -28,6 +28,8 @@ export default function VerificationsPage() {
   const [verifications, setVerifications] = useState<Verification[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Verification | null>(null);
+  const [presignedUrl, setPresignedUrl] = useState<string | null>(null);
+  const [urlLoading, setUrlLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,6 +44,17 @@ export default function VerificationsPage() {
         setLoading(false);
       });
   }, []);
+
+  const openVerification = (v: Verification) => {
+    setSelected(v);
+    setPresignedUrl(null);
+    setUrlLoading(true);
+    api.admin.verifications
+      .getStudentIdUrl(v.id)
+      .then((url) => setPresignedUrl(url))
+      .catch(() => setPresignedUrl(null))
+      .finally(() => setUrlLoading(false));
+  };
 
   const handleApprove = (id: string) => {
     api.admin.verifications.approve(id);
@@ -97,9 +110,9 @@ export default function VerificationsPage() {
                 <div
                   key={v.id}
                   className="flex items-center justify-between rounded-lg border p-4 hover:bg-muted/50 transition-colors cursor-pointer"
-                  onClick={() => setSelected(v)}
+                  onClick={() => openVerification(v)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") setSelected(v);
+                    if (e.key === "Enter" || e.key === " ") openVerification(v);
                   }}
                   role="button"
                   tabIndex={0}
@@ -145,7 +158,7 @@ export default function VerificationsPage() {
       </Card>
 
       {/* Image preview dialog */}
-      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
+      <Dialog open={!!selected} onOpenChange={(open) => { if (!open) { setSelected(null); setPresignedUrl(null); } }}>
         <DialogContent className="sm:max-w-2xl" style={{ maxWidth: "42rem", width: "min(42rem, calc(100vw - 2rem))" }}>
           <DialogHeader>
             <DialogTitle>{selected?.fullName}</DialogTitle>
@@ -155,12 +168,14 @@ export default function VerificationsPage() {
           </DialogHeader>
 
           <div className="flex flex-col gap-4">
-            {selected?.studentIdUrl ? (
+            {urlLoading ? (
+              <Skeleton className="h-64 w-full rounded-lg" />
+            ) : presignedUrl ? (
               <div className="relative overflow-hidden rounded-lg border">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={selected.studentIdUrl}
-                  alt={`Student ID for ${selected.fullName}`}
+                  src={presignedUrl}
+                  alt={`Student ID for ${selected?.fullName}`}
                   className="w-full object-contain max-h-[500px]"
                 />
               </div>
@@ -172,7 +187,7 @@ export default function VerificationsPage() {
 
             <div className="flex items-center justify-between">
               <a
-                href={selected?.studentIdUrl ?? "#"}
+                href={presignedUrl ?? "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"

@@ -18,6 +18,7 @@ import {
   ALL_USERS,
   ALL_WALLETS,
   DISPUTED_ERRANDS,
+  GENERATE_DOWNLOAD_URL,
   PENDING_VERIFICATIONS,
   PLATFORM_STATS,
   RESOLVE_DISPUTE,
@@ -106,6 +107,12 @@ export const api = {
           })),
         };
       },
+
+      getStudentIdUrl: (userId: string) =>
+        gqlFetch<{ generateDownloadUrl: string }>(GENERATE_DOWNLOAD_URL, {
+          bucket: "student-ids",
+          filePath: `${userId}/student_id.jpg`,
+        }).then((d) => d.generateDownloadUrl),
 
       approve: (id: string) =>
         gqlFetch<{ verifyStudentId: { id: string } }>(VERIFY_STUDENT_ID, {

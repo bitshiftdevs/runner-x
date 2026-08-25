@@ -455,6 +455,6 @@ export const GENERATE_UPLOAD_URL = gql`
 
 export const GENERATE_DOWNLOAD_URL = gql`
   mutation GenerateDownloadUrl($bucket: String!, $filePath: String!) {
-    generateDownloadUrl(bucket: $bucket, filePath: $filePath)
+    generateDownloadUrl(input: { bucket: $bucket, filePath: $filePath })
   }
 `;
