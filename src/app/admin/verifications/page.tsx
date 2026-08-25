@@ -146,7 +146,7 @@ export default function VerificationsPage() {
 
       {/* Image preview dialog */}
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="sm:max-w-2xl" style={{ maxWidth: "42rem", width: "min(42rem, calc(100vw - 2rem))" }}>
           <DialogHeader>
             <DialogTitle>{selected?.fullName}</DialogTitle>
             <DialogDescription>
