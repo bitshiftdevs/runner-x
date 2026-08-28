@@ -171,6 +171,7 @@ export const WALLET_TRANSACTIONS = gql`
       errandId
       type
       amount
+      transferFee
       status
       providerRef
       description
@@ -200,6 +201,7 @@ export const REQUEST_WITHDRAWAL = gql`
       errandId
       type
       amount
+      transferFee
       status
       providerRef
       description

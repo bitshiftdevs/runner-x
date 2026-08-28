@@ -187,6 +187,7 @@ export type BackendWalletTx = {
   errandId: string | null;
   type: string;
   amount: number;
+  transferFee: number;
   status: string;
   providerRef: string | null;
   description: string | null;
@@ -201,6 +202,7 @@ export function toClientWalletTx(t: BackendWalletTx): WalletTransaction {
     jobId: t.errandId,
     type: (t.type as WalletTransaction["type"]) ?? "credit",
     amount: pesewasToGhs(t.amount),
+    transferFee: pesewasToGhs(t.transferFee),
     status: (t.status as WalletTransaction["status"]) ?? "pending",
     providerRef: t.providerRef,
     description: t.description,

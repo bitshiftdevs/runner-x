@@ -21,6 +21,7 @@ export type WalletTransaction = {
   jobId: string | null;
   type: WalletTxType;
   amount: number;
+  transferFee: number;
   status: WalletTxStatus;
   providerRef: string | null;
   description: string | null;
