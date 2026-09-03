@@ -4,7 +4,7 @@ export type PaymentMethodStatus = "pending" | "verified" | "failed";
 
 export type RunnerWallet = {
   id: string;
-  runnerId: string;
+  userId: string;
   availableBalance: number;
   pendingBalance: number;
   totalEarned: number;
@@ -17,7 +17,7 @@ export type RunnerWallet = {
 export type WalletTransaction = {
   id: string;
   walletId: string;
-  runnerId: string;
+  userId: string;
   jobId: string | null;
   type: WalletTxType;
   amount: number;
@@ -30,7 +30,7 @@ export type WalletTransaction = {
 
 export type RunnerPaymentMethod = {
   id: string;
-  runnerId: string;
+  userId: string;
   provider: string;
   channel: string;
   phoneNumber: string;

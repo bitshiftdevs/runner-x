@@ -159,7 +159,7 @@ export function toClientPayment(p: BackendPayment): Payment {
 
 export type BackendWallet = {
   id: string;
-  runnerId: string;
+  userId: string;
   availableBalance: number;
   pendingBalance: number;
   totalEarned: number;
@@ -170,7 +170,7 @@ export type BackendWallet = {
 export function toClientWallet(w: BackendWallet): RunnerWallet {
   return {
     id: w.id,
-    runnerId: w.runnerId,
+    userId: w.userId,
     availableBalance: pesewasToGhs(w.availableBalance),
     pendingBalance: pesewasToGhs(w.pendingBalance),
     totalEarned: pesewasToGhs(w.totalEarned),
@@ -183,7 +183,7 @@ export function toClientWallet(w: BackendWallet): RunnerWallet {
 
 export type BackendWalletTx = {
   id: string;
-  runnerId: string;
+  userId: string;
   errandId: string | null;
   type: string;
   amount: number;
@@ -198,7 +198,7 @@ export function toClientWalletTx(t: BackendWalletTx): WalletTransaction {
   return {
     id: t.id,
     walletId: "",
-    runnerId: t.runnerId,
+    userId: t.userId,
     jobId: t.errandId,
     type: (t.type as WalletTransaction["type"]) ?? "credit",
     amount: pesewasToGhs(t.amount),
@@ -212,7 +212,7 @@ export function toClientWalletTx(t: BackendWalletTx): WalletTransaction {
 
 export type BackendPaymentMethod = {
   id: string;
-  runnerId: string;
+  userId: string;
   provider: string;
   channel: string;
   phoneNumber: string;
@@ -226,7 +226,7 @@ export function toClientPaymentMethod(
 ): RunnerPaymentMethod {
   return {
     id: m.id,
-    runnerId: m.runnerId,
+    userId: m.userId,
     provider: m.provider,
     channel: m.channel,
     phoneNumber: m.phoneNumber,

@@ -154,7 +154,7 @@ export const MY_WALLET = gql`
   query MyWallet {
     myWallet {
       id
-      runnerId
+      userId
       availableBalance
       pendingBalance
       totalEarned
@@ -167,7 +167,7 @@ export const WALLET_TRANSACTIONS = gql`
   query WalletTransactions($limit: Int, $offset: Int) {
     walletTransactions(limit: $limit, offset: $offset) {
       id
-      runnerId
+      userId
       errandId
       type
       amount
@@ -183,7 +183,7 @@ export const MY_PAYMENT_METHODS = gql`
   query MyPaymentMethods {
     myPaymentMethods {
       id
-      runnerId
+      userId
       provider
       channel
       phoneNumber
@@ -197,7 +197,7 @@ export const REQUEST_WITHDRAWAL = gql`
   mutation RequestWithdrawal($amount: Int!, $paymentMethodId: UUID!) {
     requestWithdrawal(amount: $amount, paymentMethodId: $paymentMethodId) {
       id
-      runnerId
+      userId
       errandId
       type
       amount
@@ -221,7 +221,7 @@ export const ADD_PAYMENT_METHOD = gql`
       accountName: $accountName
     ) {
       id
-      runnerId
+      userId
       provider
       channel
       phoneNumber
@@ -426,7 +426,7 @@ export const ALL_WALLETS = gql`
     allWallets(page: $page, size: $size) {
       items {
         id
-        runnerId
+        userId
         availableBalance
         pendingBalance
         totalEarned
