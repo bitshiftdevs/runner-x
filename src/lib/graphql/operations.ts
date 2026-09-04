@@ -253,18 +253,18 @@ export const SEND_MESSAGE = gql`
 
 // ── Notifications ───────────────────────────────────────────────────────
 
-const NOTIF_FIELDS = `
+const USER_SETTINGS_FIELDS = `
   pushEnabled smsEnabled
   notifyFoodErrands notifyAcademicErrands notifyDeliveryErrands notifyGeneralErrands
-  notifyErrandAccepted notifyErrandStatusChange notifyErrandCompleted notifyErrandCancelled
   notifyPaymentReceived notifyPromotions
+  shareLiveLocation
 `;
-export const MY_NOTIFICATION_PREFERENCES = gql`
-  query MyNotificationPreferences { myNotificationPreferences { ${NOTIF_FIELDS} } }
+export const MY_USER_SETTINGS = gql`
+  query MyUserSettings { myUserSettings { ${USER_SETTINGS_FIELDS} } }
 `;
-export const UPDATE_NOTIFICATION_PREFERENCES = gql`
-  mutation UpdateNotificationPreferences($input: NotificationPreferencesInput!) {
-    updateNotificationPreferences(input: $input) { ${NOTIF_FIELDS} }
+export const UPDATE_USER_SETTINGS = gql`
+  mutation UpdateUserSettings($input: UserSettingsInput!) {
+    updateUserSettings(input: $input) { ${USER_SETTINGS_FIELDS} }
   }
 `;
 

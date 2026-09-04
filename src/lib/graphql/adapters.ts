@@ -8,7 +8,7 @@ import type {
   UrgencyLevel,
 } from "@/types";
 import type {
-  NotificationPreferences,
+  UserSettings,
   RunnerPaymentMethod,
   RunnerWallet,
   WalletTransaction,
@@ -276,25 +276,22 @@ export function toClientProfile(p: BackendProfileRaw): Profile {
 
 // ── Notifications ───────────────────────────────────────────────────────
 
-export type BackendNotifPrefs = {
+export type BackendUserSettings = {
   pushEnabled: boolean;
   smsEnabled: boolean;
   notifyFoodErrands: boolean;
   notifyAcademicErrands: boolean;
   notifyDeliveryErrands: boolean;
   notifyGeneralErrands: boolean;
-  notifyErrandAccepted: boolean;
-  notifyErrandStatusChange: boolean;
-  notifyErrandCompleted: boolean;
-  notifyErrandCancelled: boolean;
   notifyPaymentReceived: boolean;
   notifyPromotions: boolean;
+  shareLiveLocation: boolean;
 };
 
-export function toClientNotifPrefs(
-  n: BackendNotifPrefs,
+export function toClientUserSettings(
+  n: BackendUserSettings,
   userId: string,
-): NotificationPreferences {
+): UserSettings {
   return {
     userId,
     pushEnabled: n.pushEnabled,
@@ -303,11 +300,8 @@ export function toClientNotifPrefs(
     notifyAcademicJobs: n.notifyAcademicErrands,
     notifyDeliveryJobs: n.notifyDeliveryErrands,
     notifyGeneralJobs: n.notifyGeneralErrands,
-    notifyJobAccepted: n.notifyErrandAccepted,
-    notifyJobStatusChange: n.notifyErrandStatusChange,
-    notifyJobCompleted: n.notifyErrandCompleted,
-    notifyJobCancelled: n.notifyErrandCancelled,
     notifyPaymentReceived: n.notifyPaymentReceived,
     notifyPromotions: n.notifyPromotions,
+    shareLiveLocation: n.shareLiveLocation,
   };
 }

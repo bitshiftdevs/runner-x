@@ -42,7 +42,7 @@ export type RunnerPaymentMethod = {
   updatedAt: string;
 };
 
-export type NotificationPreferences = {
+export type UserSettings = {
   userId: string;
   pushEnabled: boolean;
   smsEnabled: boolean;
@@ -50,10 +50,7 @@ export type NotificationPreferences = {
   notifyAcademicJobs: boolean;
   notifyDeliveryJobs: boolean;
   notifyGeneralJobs: boolean;
-  notifyJobAccepted: boolean;
-  notifyJobStatusChange: boolean;
-  notifyJobCompleted: boolean;
-  notifyJobCancelled: boolean;
   notifyPaymentReceived: boolean;
   notifyPromotions: boolean;
+  shareLiveLocation: boolean;
 };
