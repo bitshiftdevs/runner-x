@@ -397,6 +397,16 @@ export const UNBAN_USER = gql`
     }
   }
 `;
+export const SEND_ADMIN_NOTIFICATION = gql`
+  mutation SendAdminNotification($userId: UUID!, $title: String!, $body: String!) {
+    sendAdminNotification(userId: $userId, title: $title, body: $body)
+  }
+`;
+export const SEND_BULK_ADMIN_NOTIFICATION = gql`
+  mutation SendBulkAdminNotification($title: String!, $body: String!) {
+    sendBulkAdminNotification(title: $title, body: $body)
+  }
+`;
 export const ALL_PAYMENTS = gql`
   query AllPayments($status: PaymentStatus, $page: Int, $size: Int) {
     allPayments(status: $status, page: $page, size: $size) {
