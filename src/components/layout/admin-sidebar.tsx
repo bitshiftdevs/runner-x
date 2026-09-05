@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   AlertTriangle,
   TrendingUp,
-  Bell,
 } from "lucide-react";
 import {
   Sidebar,
@@ -37,7 +36,6 @@ const adminNav = [
   { title: "Jobs", href: "/admin/jobs", icon: Briefcase },
   { title: "Wallets", href: "/admin/wallets", icon: Wallet },
   { title: "Payments", href: "/admin/payments", icon: CreditCard },
-  { title: "Notifications", href: "/admin/notifications", icon: Bell },
 ];
 
 export function AdminSidebar() {

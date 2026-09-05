@@ -3,7 +3,12 @@
 import { useEffect, useState, useCallback } from "react";
 import { api, formatRelativeTime } from "@/lib";
 import { gqlFetch } from "@/lib/gql-client-browser";
-import { BAN_USER, UNBAN_USER } from "@/lib/graphql/operations";
+import {
+  BAN_USER,
+  UNBAN_USER,
+  SEND_ADMIN_NOTIFICATION,
+  SEND_BULK_ADMIN_NOTIFICATION,
+} from "@/lib/graphql/operations";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,9 +20,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { DataTable, type Column } from "@/components/admin/data-table";
 import { AvatarUser } from "@/components/admin/avatar-user";
-import { Users, Search, Ban, CheckCircle2 } from "lucide-react";
+import {
+  Users,
+  Search,
+  MoreVertical,
+  Bell,
+  Ban,
+  CheckCircle2,
+} from "lucide-react";
 
 type UserRow = {
   id: string;
@@ -30,6 +56,19 @@ type UserRow = {
   created_at: string;
 };
 
+type NotifTarget = "user" | "selected" | "all";
+
+type NotifModal = {
+  open: boolean;
+  target: NotifTarget;
+  userId?: string;
+  userName?: string;
+};
+
+type SendStatus = "idle" | "sending" | "ok" | "error";
+
+const CLOSED_MODAL: NotifModal = { open: false, target: "user" };
+
 export default function UsersPage() {
   const [users, setUsers] = useState<UserRow[]>([]);
   const [total, setTotal] = useState(0);
@@ -38,6 +77,8 @@ export default function UsersPage() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [modal, setModal] = useState<NotifModal>(CLOSED_MODAL);
   const pageSize = 20;
 
   const fetchUsers = useCallback(async () => {
@@ -62,10 +103,28 @@ export default function UsersPage() {
     fetchUsers();
   }, [fetchUsers]);
 
-  // Reset to page 0 when filters change
   useEffect(() => {
     setPage(0);
+    setSelected(new Set());
   }, [search, roleFilter]);
+
+  const toggleSelect = (id: string) =>
+    setSelected((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+
+  const toggleSelectAll = () => {
+    const pageIds = users.map((u) => u.id);
+    const allSelected = pageIds.every((id) => selected.has(id));
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (allSelected) pageIds.forEach((id) => next.delete(id));
+      else pageIds.forEach((id) => next.add(id));
+      return next;
+    });
+  };
 
   const handleBanToggle = async (user: UserRow) => {
     if (user.banned) {
@@ -78,7 +137,30 @@ export default function UsersPage() {
     );
   };
 
+  const openUserNotif = (user: UserRow) =>
+    setModal({ open: true, target: "user", userId: user.id, userName: user.full_name });
+
+  const openBulkNotif = () =>
+    setModal({ open: true, target: selected.size > 0 ? "selected" : "all" });
+
+  const allOnPageSelected =
+    users.length > 0 && users.every((u) => selected.has(u.id));
+
   const columns: Column<UserRow>[] = [
+    {
+      key: "__check__",
+      header: "",
+      className: "w-0 pr-0",
+      render: (u) => (
+        <input
+          type="checkbox"
+          checked={selected.has(u.id)}
+          onChange={() => toggleSelect(u.id)}
+          className="size-4 cursor-pointer accent-primary"
+          aria-label={`Select ${u.full_name}`}
+        />
+      ),
+    },
     {
       key: "full_name",
       header: "User",
@@ -134,20 +216,35 @@ export default function UsersPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-          <Users className="size-6" />
-          Users
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Manage platform users and verification status
-        </p>
-        {error && <p className="text-sm text-destructive mt-1">{error}</p>}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+            <Users className="size-6" />
+            Users
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Manage platform users and verification status
+          </p>
+          {error && <p className="text-sm text-destructive mt-1">{error}</p>}
+        </div>
+        <Button size="sm" onClick={openBulkNotif}>
+          <Bell className="size-4 mr-1.5" />
+          {selected.size > 0 ? `Notify ${selected.size} Selected` : "Notify All Users"}
+        </Button>
       </div>
 
       <Card>
         <CardHeader>
           <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={allOnPageSelected}
+                onChange={toggleSelectAll}
+                className="size-4 cursor-pointer accent-primary"
+                aria-label="Select all on page"
+              />
+            </div>
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <Input
@@ -184,27 +281,189 @@ export default function UsersPage() {
             loading={loading}
             onPageChange={setPage}
             emptyMessage="No users found"
-            actions={(u) =>
-              u.banned ? (
-                <Button size="sm" variant="outline" onClick={() => handleBanToggle(u)}>
-                  <CheckCircle2 data-icon="inline-start" />
-                  Unban
-                </Button>
-              ) : (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="text-destructive border-destructive/30 hover:bg-destructive/10"
-                  onClick={() => handleBanToggle(u)}
-                >
-                  <Ban data-icon="inline-start" />
-                  Ban
-                </Button>
-              )
-            }
+            actions={(u) => (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="icon-sm" variant="ghost" aria-label="Actions">
+                    <MoreVertical className="size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => openUserNotif(u)}>
+                    <Bell className="size-4" />
+                    Send Notification
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  {u.banned ? (
+                    <DropdownMenuItem onClick={() => handleBanToggle(u)}>
+                      <CheckCircle2 className="size-4" />
+                      Unban
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem
+                      variant="destructive"
+                      onClick={() => handleBanToggle(u)}
+                    >
+                      <Ban className="size-4" />
+                      Ban
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           />
         </CardContent>
       </Card>
+
+      <NotificationModal
+        modal={modal}
+        selectedCount={selected.size}
+        selectedIds={Array.from(selected)}
+        onClose={() => setModal(CLOSED_MODAL)}
+      />
     </div>
+  );
+}
+
+function NotificationModal({
+  modal,
+  selectedCount,
+  selectedIds,
+  onClose,
+}: {
+  modal: NotifModal;
+  selectedCount: number;
+  selectedIds: string[];
+  onClose: () => void;
+}) {
+  const [target, setTarget] = useState<NotifTarget>(modal.target);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [status, setStatus] = useState<SendStatus>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    if (modal.open) {
+      setTarget(modal.target);
+      setTitle("");
+      setBody("");
+      setStatus("idle");
+      setErrorMsg("");
+    }
+  }, [modal.open, modal.target]);
+
+  const handleSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("sending");
+    setErrorMsg("");
+    try {
+      if (target === "all") {
+        await gqlFetch(SEND_BULK_ADMIN_NOTIFICATION, { title, body });
+      } else if (target === "user" && modal.userId) {
+        await gqlFetch(SEND_ADMIN_NOTIFICATION, {
+          userId: modal.userId,
+          title,
+          body,
+        });
+      } else {
+        await Promise.all(
+          selectedIds.map((userId) =>
+            gqlFetch(SEND_ADMIN_NOTIFICATION, { userId, title, body }),
+          ),
+        );
+      }
+      setStatus("ok");
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Failed to send");
+      setStatus("error");
+    }
+  };
+
+  const targetLabel =
+    target === "user"
+      ? modal.userName ?? "User"
+      : target === "selected"
+        ? `${selectedCount} selected user${selectedCount !== 1 ? "s" : ""}`
+        : "All users";
+
+  return (
+    <Dialog open={modal.open} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Send Notification</DialogTitle>
+        </DialogHeader>
+
+        <form onSubmit={handleSend} className="flex flex-col gap-4">
+          {modal.target !== "user" && (
+            <div className="flex gap-2">
+              {selectedCount > 0 && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={target === "selected" ? "default" : "outline"}
+                  onClick={() => setTarget("selected")}
+                >
+                  {selectedCount} Selected
+                </Button>
+              )}
+              <Button
+                type="button"
+                size="sm"
+                variant={target === "all" ? "default" : "outline"}
+                onClick={() => setTarget("all")}
+              >
+                All Users
+              </Button>
+            </div>
+          )}
+
+          <p className="text-sm text-muted-foreground">
+            Sending to:{" "}
+            <span className="font-medium text-foreground">{targetLabel}</span>
+          </p>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium" htmlFor="notif-title">
+              Title
+            </label>
+            <Input
+              id="notif-title"
+              placeholder="Notification title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium" htmlFor="notif-body">
+              Message
+            </label>
+            <textarea
+              id="notif-body"
+              placeholder="Notification body"
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              rows={3}
+              required
+              className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
+            />
+          </div>
+
+          {status === "ok" && (
+            <p className="text-sm text-green-600">Notification sent.</p>
+          )}
+          {status === "error" && (
+            <p className="text-sm text-destructive">{errorMsg}</p>
+          )}
+
+          <DialogFooter showCloseButton>
+            <Button type="submit" disabled={status === "sending"}>
+              {status === "sending" ? "Sending…" : "Send"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
