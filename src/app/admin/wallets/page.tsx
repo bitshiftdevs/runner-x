@@ -4,11 +4,12 @@ import { useEffect, useState, useCallback } from "react";
 import { api, formatCurrency, formatRelativeTime } from "@/lib";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTable, type Column } from "@/components/admin/data-table";
+import { AvatarUser } from "@/components/admin/avatar-user";
 import { Wallet } from "lucide-react";
 
 type WalletRow = {
   id: string;
-  profiles: { full_name: string } | null;
+  user: { id: string; fullName: string; avatarUrl?: string | null } | null;
   available_balance: number;
   pending_balance: number;
   total_earned: number;
@@ -43,10 +44,14 @@ export default function WalletsPage() {
 
   const columns: Column<WalletRow>[] = [
     {
-      key: "profiles",
+      key: "user",
       header: "Runner",
-      className: "font-medium",
-      render: (w) => w.profiles?.full_name ?? "Unknown",
+      render: (w) =>
+        w.user ? (
+          <AvatarUser name={w.user.fullName} />
+        ) : (
+          <span className="text-muted-foreground">Unknown</span>
+        ),
     },
     {
       key: "available_balance",

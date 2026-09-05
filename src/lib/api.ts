@@ -244,7 +244,7 @@ export const api = {
         const data = await gqlFetch<{
           allWallets: {
             items: (BackendWallet & {
-              runner?: {
+              user?: {
                 id: string;
                 fullName: string;
                 avatarUrl?: string | null;
@@ -255,7 +255,7 @@ export const api = {
         }>(ALL_WALLETS, { page, size: limit });
         const wallets = data.allWallets.items.map((w) => ({
           id: w.id,
-          profiles: w.runner ? { full_name: w.runner.fullName } : null,
+          user: w.user ?? null,
           available_balance: w.availableBalance,
           pending_balance: w.pendingBalance,
           total_earned: w.totalEarned,

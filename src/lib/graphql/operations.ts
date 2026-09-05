@@ -442,7 +442,7 @@ export const ALL_WALLETS = gql`
         totalEarned
         totalWithdrawn
         currency
-        runner {
+        user {
           id
           fullName
           avatarUrl
